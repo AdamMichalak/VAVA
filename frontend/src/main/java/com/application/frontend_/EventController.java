@@ -33,7 +33,7 @@ public class EventController extends SwitchScenes {
 
     @FXML private Button joinEvent;
 
-    @FXML private Button addToWishlist;
+    //@FXML private Button addToWishlist;
 
     @FXML private Label eventName;
 
@@ -91,7 +91,11 @@ public class EventController extends SwitchScenes {
         signUpHome.setOnAction((event) -> register());
         signInHome.setOnAction((event) -> switchToLoginScreen());
         joinEvent.setOnAction((event) -> showAlert());
-        addToWishlist.setOnAction((event) -> addToList());
+        try{
+            getItems();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void back() {
