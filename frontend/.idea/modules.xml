@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/VAVA_projekt.iml" filepath="$PROJECT_DIR$/VAVA_projekt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/frontend_.iml" filepath="$PROJECT_DIR$/frontend_.iml" />
     </modules>
   </component>
 </project>
