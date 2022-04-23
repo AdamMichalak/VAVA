@@ -29,21 +29,16 @@ public class EventController {
 	private JwtUtil jwtTokenUtil;
 
 	@GetMapping("/browse")
-	public ResponseEntity<Object> browse(@Valid @RequestBody BrowseEvents event) {
+	public ResponseEntity<Object> browse(@RequestParam(required = false, defaultValue = "_") String name,
+										 @RequestParam(required = false, defaultValue = "01.01.2100") String exp_date,
+										 @RequestParam(required = false) String[] interests_id,
+										 @RequestParam Integer page)
+	{
 		//if(!result) return Response.exception();
-		ResultSet result = DB.get_events(event);
+		Object result = DB.get_events(name, exp_date, interests_id, page);
+		System.out.println(result);
 		if(result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		try {
-			if(result.next())
-			{
-				return ResponseEntity.ok(result.getObject(1));
-			}
-		}
-		catch(SQLException e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		return ResponseEntity.ok(true);
+		return ResponseEntity.ok(result.toString());
 	}
 
 	@GetMapping("/interests")
