@@ -3,6 +3,8 @@ package middleware;
 import com.sun.jdi.IntegerType;
 import com.sun.tools.javac.Main;
 import model.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import request.*;
 
 import java.lang.reflect.Field;
@@ -34,30 +36,28 @@ public class DB {
 			return null;
 		}
 	}
-	public static ResultSet get_events(BrowseEvents event)
+	public static JSONObject get_events(String name, String exp_date, String[] interests_id, Integer page)
 	{
 		try{
 			if(connection==null) connect();
 		} catch (SQLException e){
 			return null;
 		}
-		String sql =	"SELECT json_build_object( 'current_page', ?, 'page_count', ceil, 'events', json_agg(event_objects))" +
-						"FROM ( SELECT ceil(COUNT(*) over(PARTITION BY filler)/4.0), row_to_json event_objects FROM(" +
-						"SELECT row_to_json(events), 1 as filler FROM events" +
-						" JOIN interests i on interest_id = i.id" +
-						" JOIN users u on creator_id = u.id" +
-						" WHERE expiration_date > NOW() AND expiration_date < ?" +
-						" AND NAME ILIKE ?";
-		if(event.getInterest_id() != null) {
-			String sql_array = " AND interest_id  IN (";
-			for (Integer interest : event.getInterest_id()) {
+		String sql = 	"SELECT * FROM events" +
+				" JOIN interests i on interest_id = i.id" +
+				" JOIN users u on creator_id = u.id" +
+				" WHERE expiration_date > NOW() AND expiration_date < ?" +
+				" AND NAME ILIKE ?";
+		String sql_array = "";
+		if(interests_id != null) {
+			sql_array = " AND interest_id  IN (";
+			for (String interest : interests_id) {
 				sql_array += "?,";
 			}
 			sql_array = sql_array.substring(0, sql_array.length() - 1) + ")";
 			sql += sql_array;
 		}
-		sql +=	" ORDER BY expiration_date" +
-				") json_objects OFFSET ? LIMIT 4) count_limit GROUP BY ceil";
+		sql +=	" ORDER BY expiration_date OFFSET ? LIMIT 4";
 		PreparedStatement statement;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 		try {
@@ -66,27 +66,77 @@ public class DB {
 			return null;
 		}
 		try {
-			statement.setInt(1,event.getPage());
-			statement.setDate(2,new java.sql.Date(formatter.parse(event.getExpiration_date()).getTime()));
-			statement.setString(3,"%"+event.getName()+"%");
-			int count = 4;
-			if(event.getInterest_id() != null)
+			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setString(2,"%"+name+"%");
+			int count = 3;
+			if(interests_id != null)
 			{
-				for(Integer interest : event.getInterest_id())
+				for(String interest :interests_id)
 				{
-					statement.setInt(count,interest);
+					statement.setInt(count,Integer.parseInt(interest));
 					count++;
 				}
 			}
-			statement.setInt(count,4*(event.getPage()-1));
+			statement.setInt(count,4*(page-1));
 		} catch (SQLException | ParseException e) {
 			return null;
 		}
+		JSONArray events = new JSONArray();
 		try {
 			ResultSet result = statement.executeQuery();
-			return result;
+			while(result.next())
+			{
+				JSONObject tmp = new JSONObject();
+				tmp.put("creator_first_name", result.getString("first_name"));
+				tmp.put("creator_last_name", result.getString("last_name"));
+				tmp.put("creator_id", result.getInt("creator_id"));
+				tmp.put("interest_id", result.getInt("interest_id"));
+				tmp.put("interest_name", result.getString("interest_name"));
+				tmp.put("name", result.getString("name"));
+				tmp.put("description", result.getString("description"));
+				tmp.put("max_participants", result.getInt("max_participate"));
+				tmp.put("expiration_date", result.getDate("expiration_date"));
+				tmp.put("created_at", result.getDate("created_at"));
+				events.put(tmp);
+			}
+			sql = 	"SELECT CEIL(COUNT(*)/4.0) as count FROM events" +
+					" WHERE expiration_date > NOW() AND expiration_date < ?" +
+					" AND NAME ILIKE ?";
+			if(interests_id != null) {
+				sql += sql_array;
+			}
+			try {
+				statement = connection.prepareStatement(sql);
+			} catch (SQLException e) {
+				return null;
+			}
+			try {
+				statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+				statement.setString(2,"%"+name+"%");
+				int count = 3;
+				if(interests_id != null)
+				{
+					for(String interest :interests_id)
+					{
+						statement.setInt(count,Integer.parseInt(interest));
+						count++;
+					}
+				}
+			} catch (SQLException | ParseException e) {
+				return null;
+			}
+			try {
+				result = statement.executeQuery();
+				JSONObject ret = new JSONObject();
+				result.next();
+				ret.put("current_page", page);
+				ret.put("page_count", result.getInt("count"));
+				ret.put("events", events);
+				return ret;
+			} catch (SQLException e) {
+				return null;
+			}
 		} catch (SQLException e) {
-			System.out.println(e);
 			return null;
 		}
 	}
