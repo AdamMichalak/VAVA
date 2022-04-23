@@ -68,26 +68,25 @@
                     <Font name="System Bold" size="32.0" />
                 </font>
             </Label>
-
             <AnchorPane layoutX="28.0" layoutY="131.0" prefHeight="201.0" prefWidth="354.0" style="-fx-background-color: #eaedf0;">
                 <children>
-                    <ImageView fitHeight="154.0" fitWidth="129.0" layoutX="14.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="image1" fitHeight="154.0" fitWidth="129.0" layoutX="14.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
                         <image>
                             <Image url="@/logo.png" />
                         </image>
                     </ImageView>
 
-                    <Label layoutX="21.0" layoutY="14.0" prefHeight="21.0" prefWidth="72.0" text="Názov">
+                    <Label fx:id="name1" layoutX="21.0" layoutY="14.0" prefHeight="21.0" prefWidth="72.0" text="Názov">
                         <font>
                             <Font name="System Bold" size="24.0" />
                         </font>
                     </Label>
-                    <Label layoutX="158.0" layoutY="21.0" text="Dátum 01.01.1999">
+                    <Label fx:id="date1" layoutX="158.0" layoutY="21.0" text="Dátum 01.01.1999">
                         <font>
                             <Font name="System Bold" size="14.0" />
                         </font>
                     </Label>
-                    <Label alignment="TOP_LEFT" layoutX="158.0" layoutY="49.0" prefHeight="114.0" prefWidth="181.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" wrapText="true">
+                    <Label fx:id="desc1" alignment="TOP_LEFT" layoutX="158.0" layoutY="49.0" prefHeight="114.0" prefWidth="181.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" wrapText="true">
                         <font>
                             <Font size="10.0" />
                         </font>
@@ -98,22 +97,22 @@
 
             <AnchorPane layoutX="28.0" layoutY="358.0" prefHeight="201.0" prefWidth="354.0" style="-fx-background-color: #eaedf0;">
                 <children>
-                    <ImageView fitHeight="154.0" fitWidth="129.0" layoutX="14.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" >
+                    <ImageView fx:id="image2" fitHeight="154.0" fitWidth="129.0" layoutX="14.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" >
                         <image>
                             <Image url="@/logo.png" />
                         </image>
                     </ImageView>
-                    <Label fx:id="Nazov1" layoutX="21.0" layoutY="14.0" prefHeight="21.0" prefWidth="72.0" text="Názov">
+                    <Label fx:id="name2" layoutX="21.0" layoutY="14.0" prefHeight="21.0" prefWidth="72.0" text="Názov">
                         <font>
                             <Font name="System Bold" size="24.0" />
                         </font>
                     </Label>
-                    <Label layoutX="158.0" layoutY="21.0" text="Dátum 01.01.1999">
+                    <Label fx:id="date2" layoutX="158.0" layoutY="21.0" text="Dátum 01.01.1999">
                         <font>
                             <Font name="System Bold" size="14.0" />
                         </font>
                     </Label>
-                    <Label alignment="TOP_LEFT" layoutX="158.0" layoutY="49.0" prefHeight="114.0" prefWidth="181.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" wrapText="true">
+                    <Label fx:id="desc2" alignment="TOP_LEFT" layoutX="158.0" layoutY="49.0" prefHeight="114.0" prefWidth="181.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" wrapText="true">
                         <font>
                             <Font size="10.0" />
                         </font>
@@ -124,22 +123,22 @@
 
             <AnchorPane layoutX="418.0" layoutY="131.0" prefHeight="201.0" prefWidth="354.0" style="-fx-background-color: #eaedf0;">
                 <children>
-                    <ImageView fitHeight="154.0" fitWidth="129.0" layoutX="14.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" >
+                    <ImageView fx:id="image3" fitHeight="154.0" fitWidth="129.0" layoutX="14.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" >
                         <image>
                             <Image url="@/logo.png" />
                         </image>
                     </ImageView>
-                    <Label layoutX="21.0" layoutY="14.0" prefHeight="21.0" prefWidth="72.0" text="Názov">
+                    <Label fx:id="name3" layoutX="21.0" layoutY="14.0" prefHeight="21.0" prefWidth="72.0" text="Názov">
                         <font>
                             <Font name="System Bold" size="24.0" />
                         </font>
                     </Label>
-                    <Label layoutX="158.0" layoutY="21.0" text="Dátum 01.01.1999">
+                    <Label fx:id="date3" layoutX="158.0" layoutY="21.0" text="Dátum 01.01.1999">
                         <font>
                             <Font name="System Bold" size="14.0" />
                         </font>
                     </Label>
-                    <Label alignment="TOP_LEFT" layoutX="158.0" layoutY="49.0" prefHeight="114.0" prefWidth="181.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" wrapText="true">
+                    <Label fx:id="desc3" alignment="TOP_LEFT" layoutX="158.0" layoutY="49.0" prefHeight="114.0" prefWidth="181.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" wrapText="true">
                         <font>
                             <Font size="10.0" />
                         </font>
@@ -150,22 +149,22 @@
 
             <AnchorPane layoutX="418.0" layoutY="358.0" prefHeight="201.0" prefWidth="354.0" style="-fx-background-color: #eaedf0;">
                 <children>
-                    <ImageView fitHeight="154.0" fitWidth="129.0" layoutX="14.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" >
+                    <ImageView fx:id="image4" fitHeight="154.0" fitWidth="129.0" layoutX="14.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" >
                         <image>
                             <Image url="@/logo.png" />
                         </image>
                     </ImageView>
-                    <Label layoutX="21.0" layoutY="14.0" prefHeight="21.0" prefWidth="72.0" text="Názov">
+                    <Label fx:id="name4" layoutX="21.0" layoutY="14.0" prefHeight="21.0" prefWidth="72.0" text="Názov">
                         <font>
                             <Font name="System Bold" size="24.0" />
                         </font>
                     </Label>
-                    <Label layoutX="158.0" layoutY="21.0" text="Dátum 01.01.1999">
+                    <Label fx:id="date4" layoutX="158.0" layoutY="21.0" text="Dátum 01.01.1999">
                         <font>
                             <Font name="System Bold" size="14.0" />
                         </font>
                     </Label>
-                    <Label alignment="TOP_LEFT" layoutX="158.0" layoutY="49.0" prefHeight="114.0" prefWidth="181.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" wrapText="true">
+                    <Label fx:id="desc4" alignment="TOP_LEFT" layoutX="158.0" layoutY="49.0" prefHeight="114.0" prefWidth="181.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" wrapText="true">
                         <font>
                             <Font size="10.0" />
                         </font>
@@ -173,6 +172,7 @@
                     <Button fx:id="button4" layoutX="208.0" layoutY="148.0" mnemonicParsing="false" text="Zobraziť" />
                 </children>
             </AnchorPane>
+
 
         </AnchorPane>
 
