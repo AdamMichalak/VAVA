@@ -78,9 +78,14 @@
                     </Button>
 
                     <children>
-                        <Label layoutX="21.0" layoutY="14.0" prefHeight="35.0" prefWidth="243.0" text="Meno Priezvisko ">
+                        <Label fx:id="NameSecondName" layoutX="21.0" layoutY="14.0" prefHeight="35.0" prefWidth="243.0" text="Meno Priezvisko ">
                             <font>
                                 <Font name="System Bold" size="17.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="email" layoutX="21.0" layoutY="40.0" prefHeight="35.0" prefWidth="243.0" text="email">
+                            <font>
+                                <Font name="" size="13.0" />
                             </font>
                         </Label>
                         <Label layoutX="21.0" layoutY="99.0" text="Moje udalosti">

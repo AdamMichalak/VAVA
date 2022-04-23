@@ -64,7 +64,7 @@
                 </font>
             </Button>
 
-            <Label alignment="CENTER" layoutX="205.0" layoutY="61.0" prefHeight="47.0" prefWidth="390.0" text="Názov udalosti">
+            <Label fx:id="eventName" alignment="CENTER" layoutX="205.0" layoutY="61.0" prefHeight="47.0" prefWidth="390.0" text="Názov udalosti">
                 <font>
                     <Font name="System Bold" size="32.0" />
                 </font>
@@ -75,9 +75,10 @@
                     <Image url="@/logo.png" />
                 </image>
             </ImageView>
-            <Label layoutX="96.0" layoutY="336.0" prefHeight="36.0" prefWidth="625.0" style="-fx-background-color: #eaedf0;" text="Dátum 01. januára 1999" />
-            <Label layoutX="96.0" layoutY="368.0" prefHeight="36.0" prefWidth="625.0" style="-fx-background-color: #eaedf0;" text="Čas o 17:00" />
-            <Label alignment="TOP_LEFT" layoutX="96.0" layoutY="402.0" lineSpacing="1.0" prefHeight="144.0" prefWidth="625.0" style="-fx-background-color: #eaedf0;" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" textAlignment="JUSTIFY" wrapText="true">
+            <Label fx:id="date" layoutX="96.0" layoutY="336.0" prefHeight="20.0" prefWidth="625.0" style="-fx-background-color: #eaedf0;" text="Dátum 01. januára 1999" />
+            <Label fx:id="time" layoutX="96.0" layoutY="356.0" prefHeight="20.0" prefWidth="625.0" style="-fx-background-color: #eaedf0;" text="Čas o 17:00" />
+            <Label fx:id="participants" layoutX="96.0" layoutY="376.0" prefHeight="26.0" prefWidth="625.0" style="-fx-background-color: #eaedf0;" text="Max. počet: 5" />
+            <Label fx:id="description" alignment="TOP_LEFT" layoutX="96.0" layoutY="402.0" lineSpacing="1.0" prefHeight="144.0" prefWidth="625.0" style="-fx-background-color: #eaedf0;" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" textAlignment="JUSTIFY" wrapText="true">
                 <opaqueInsets>
                     <Insets />
                 </opaqueInsets>

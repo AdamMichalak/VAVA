@@ -4,9 +4,13 @@ import com.application.frontend_.LoginController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,11 +21,11 @@ public class ProfileController extends SwitchScenes {
 
     @FXML private Button backToHome;
 
-    @FXML private Button signUpHome;
-
-    @FXML private Button signInHome;
-
     @FXML private Button createEvent;
+
+    @FXML private Label NameSecondName;
+
+    @FXML private Label email;
 
     public void getItems() throws IOException {
         String url = "http://localhost:8080/api/user/info/token";
@@ -34,7 +38,7 @@ public class ProfileController extends SwitchScenes {
         con.setRequestProperty("Content-Type","application/json");
         con.setUseCaches(false);
         con.setAllowUserInteraction(false);
-        com.application.frontend_.LoginController trieda = new LoginController();
+        LoginController trieda = new LoginController();
         String token1 = trieda.getToken();
         // [" token "]
         token1 = token1.substring(2);
@@ -43,26 +47,27 @@ public class ProfileController extends SwitchScenes {
         //con.setRequestProperty ("Authorization", "Bearer " + token1.toString());
         con.setRequestProperty ("Authorization", "Bearer "+ token1.toString());
         con.connect();
-        //con.setDoOutput(true);
-        //DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 
-        //JSONObject mainObject = new JSONObject();
-        ///wr.writeBytes(tokenObject.toString());
-        //wr.flush();
-        //wr.close();
-        //System.out.println(con.getResponseMessage());
-        System.out.println(con.getContent());
-        //System.out.println(con.getOutputStream());
+        System.out.println(con.getContent().toString());
+        System.out.println(new InputStreamReader(con.getInputStream()));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        StringBuilder result = new StringBuilder();
+        String line;
+        while((line = reader.readLine()) != null) {
+            result.append(line);
+        }
+        System.out.println(result.toString());
+        JSONObject jsonObject = new JSONObject(result.toString());
+        NameSecondName.setText(jsonObject.get("first_name").toString() + " " + jsonObject.get("last_name").toString());
+        email.setText(jsonObject.get("email").toString());
         int responseCode = con.getResponseCode();
-        //System.out.println("Sending 'POST' request to URL : " + url);
-        //System.out.println("GET Data : " + mainObject);
         System.out.println("Response Code : " + responseCode);
     }
 
     public void initialize(URL url, ResourceBundle resourceBundl) {
         backToHome.setOnAction((event) -> back());
-        signUpHome.setOnAction((event) -> register());
-        signInHome.setOnAction((event) -> switchToLoginScreen());
+        //signUpHome.setOnAction((event) -> register());
+        //signInHome.setOnAction((event) -> switchToLoginScreen());
         createEvent.setOnAction((event) -> createNewEvent());
         try{
             getItems();
