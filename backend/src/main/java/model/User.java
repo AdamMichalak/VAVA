@@ -26,6 +26,5 @@ public class User{
 	private Integer gender_id;
 	private Date registered_at;
 	private String isic_number;
-	private String role_name;
 	private String gender_name;
 }

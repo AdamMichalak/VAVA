@@ -186,9 +186,8 @@ public class DB {
 		}
 		try{
 			String sql = ("SELECT users.id, users.first_name, users.last_name, users.email,\n" +
-					"       users.location, users.date_of_birth, users.password, users.gender_id, users.role_id,\n" +
-					"       users.registered_at, users.isic_number, r.role_name, g.gender_name FROM users\n" +
-					"    join role r on r.id = users.role_id\n" +
+					"       users.location, users.date_of_birth, users.password, users.gender_id, \n" +
+					"       users.registered_at, users.isic_number, g.gender_name FROM users\n" +
 					"    join genders g on g.id = users.gender_id where users.id = ?");
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, id);
@@ -206,7 +205,6 @@ public class DB {
 			model.setIsic_number(rs.getString("isic_number"));
 			model.setRegistered_at(new java.util.Date(rs.getTimestamp("registered_at").getTime()));
 			model.setGender_name(rs.getString("gender_name"));
-			model.setRole_name(rs.getString("role_name"));
 			return model;
 		}
 		catch (SQLException e){
