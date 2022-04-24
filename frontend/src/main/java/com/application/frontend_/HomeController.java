@@ -73,7 +73,6 @@ public class HomeController extends SwitchScenes{
             eventBox.setMinHeight(180);
             eventBox.setBackground(new Background(new BackgroundFill(Color.valueOf("#eaedf0"), new CornerRadii(8), Insets.EMPTY)));
 
-
             VBox left = new VBox();
 
             left.setMinWidth(120);
@@ -81,8 +80,7 @@ public class HomeController extends SwitchScenes{
             left.setSpacing(10);
             Label eventName = new Label();
             eventName.setMinWidth(370);
-            eventName.setFont(new Font(20));
-            eventName.setStyle("-fx-font-weight: bold");
+            eventName.setStyle("-fx-font-size: 20; -fx-font-weight: 700;");
             eventName.setText(event.get("name").toString());
 
             ImageView eventImage = new ImageView();
@@ -108,10 +106,10 @@ public class HomeController extends SwitchScenes{
             right.setMaxWidth(210);
             Label eventExpDate = new Label();
             eventExpDate.setMinWidth(170);
-            eventExpDate.setFont(new Font(14));
-            eventExpDate.setStyle("-fx-font-weight: bold");
+            eventExpDate.setStyle("-fx-font-size: 14; -fx-font-weight: 700;");
             eventExpDate.setText("Dátum: " + event.get("expiration_date").toString());
             Text eventDesc = new Text();
+            eventDesc.setStyle("-fx-font-size: 14;");
             eventDesc.setWrappingWidth(170);
             eventDesc.setText(event.get("description").toString());
 

@@ -63,9 +63,6 @@
                     <Font name="System Bold" size="32.0" />
                 </font>
             </Label>
-
-
         </AnchorPane>
-
     </children>
 </VBox>

@@ -104,10 +104,7 @@ public class LoginController<url, params> extends SwitchScenes {
         in.close();
 
         JSONObject jsonObject = new JSONObject(response.toString());
-        JSONArray nameArray = jsonObject.names();
-        JSONArray tokenJSON = jsonObject.toJSONArray(nameArray);
-
-        token = tokenJSON.get(0).toString();
+        token = jsonObject.get("jwt").toString();
 
         switchToHomeScreen();
     }
