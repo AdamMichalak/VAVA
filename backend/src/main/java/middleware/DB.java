@@ -476,8 +476,8 @@ public class DB {
 		try{
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, event_id);
-			statement.setInt(2, event_id);
 			statement.setInt(3, user_id);
+			statement.setInt(2, event_id);
 			statement.setInt(4, user_id);
 			statement.setInt(5, event_id);
 			ResultSet rs =  statement.executeQuery();
