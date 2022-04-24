@@ -41,6 +41,18 @@ public class EventController {
 		return ResponseEntity.ok(result.toString());
 	}
 
+	@GetMapping("/page_count")
+	public ResponseEntity<Object> page_count(@RequestParam(required = false, defaultValue = "_") String name,
+										 @RequestParam(required = false, defaultValue = "01.01.2100") String exp_date,
+										 @RequestParam(required = false) String[] interests_id)
+	{
+		//if(!result) return Response.exception();
+		Object result = DB.get_page_count(name, exp_date, interests_id);
+		System.out.println(result);
+		if(result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		return ResponseEntity.ok(result.toString());
+	}
+
 	@GetMapping("/interests")
 	public ResponseEntity<Object> get_interests(){
 		ArrayList<Interest> interests = DB.get_interest();

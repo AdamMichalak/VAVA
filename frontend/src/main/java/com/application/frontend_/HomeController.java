@@ -179,7 +179,6 @@ public class HomeController extends SwitchScenes{
         }
     }
 
-
     public void showProfile() {
         try {
             system.getChildren().clear();

@@ -84,4 +84,10 @@ public class UserController {
 		return ResponseEntity.ok(user_model);
 	}
 
+	@GetMapping("/participations")
+	public ResponseEntity<Object> get_user_event_participation(@RequestHeader("Authorization") String token){
+		Integer user_id = jwtTokenUtil.extractId(token.substring(7));
+		JSONObject user_model = DB.get_events_by_user_participation(user_id);
+		return ResponseEntity.ok(user_model.toString());
+	}
 }
