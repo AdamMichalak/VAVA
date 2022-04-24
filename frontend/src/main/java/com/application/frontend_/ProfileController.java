@@ -29,6 +29,10 @@ public class ProfileController extends SwitchScenes {
 
     @FXML private Label email;
 
+    @FXML private Label isic;
+
+    @FXML private Label location;
+
     public void getItems() throws IOException {
         String url = "http://localhost:8080/api/user/info/token";
         URL obj = new URL(url);
@@ -61,7 +65,9 @@ public class ProfileController extends SwitchScenes {
         System.out.println(result.toString());
         JSONObject jsonObject = new JSONObject(result.toString());
         NameSecondName.setText(jsonObject.get("first_name").toString() + " " + jsonObject.get("last_name").toString());
-        email.setText(jsonObject.get("email").toString());
+        email.setText("E-mail: " + jsonObject.get("email").toString());
+        isic.setText("ISIC: " + jsonObject.get("isic_number").toString());
+        location.setText("Lokalita: " + jsonObject.get("location").toString());
         int responseCode = con.getResponseCode();
         System.out.println("Response Code : " + responseCode);
     }
