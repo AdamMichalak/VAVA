@@ -263,6 +263,43 @@ public class DB {
 		return true;
 	}
 
+	public static JSONObject get_events_by_user_participation(Integer id) {
+		try {
+			if (connection == null) connect();
+		} catch (SQLException e) {
+			return null;
+		}
+		String sql = 	"SELECT name, e.id FROM event_user eu JOIN events e ON eu.event_id = e.id WHERE eu.user_id = ?";
+
+		PreparedStatement statement;
+		try {
+			statement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			return null;
+		}
+		try {
+			statement.setInt(1, id);
+		} catch (SQLException e) {
+			return null;
+		}
+		try {
+			ResultSet result = statement.executeQuery();
+			JSONObject ret = new JSONObject();
+			JSONArray events = new JSONArray();
+			while(result.next())
+			{
+				JSONObject tmp = new JSONObject();
+				tmp.put("name", result.getString("name"));
+				tmp.put("id", result.getInt("id"));
+				events.put(tmp);
+			}
+			ret.put("events", events);
+			return ret;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+
 	public static User get_user_by_email(String email) {
 		try{
 			if(connection==null) connect();
