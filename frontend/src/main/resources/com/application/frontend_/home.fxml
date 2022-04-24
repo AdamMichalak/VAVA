@@ -40,13 +40,13 @@
                 </textFill>
             </Label>
 
-            <Button fx:id="logoutButton" layoutX="678.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Odhlásiť" textFill="WHITE">
+            <Button fx:id="logoutButton" layoutX="678.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Odhlásiť" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="13.0" />
                 </font>
             </Button>
 
-            <Button fx:id="showProfile" layoutX="572.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Profil" textFill="WHITE">
+            <Button fx:id="showProfile" layoutX="572.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Profil" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="13.0" />
                 </font>

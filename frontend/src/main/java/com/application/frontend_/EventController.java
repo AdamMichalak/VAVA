@@ -30,11 +30,7 @@ public class EventController extends SwitchScenes {
 
     @FXML private Button backToHome;
 
-    @FXML private Button signUpHome;
-
     @FXML private Button editButton;
-
-    @FXML private Button signInHome;
 
     @FXML private Button joinEvent;
 
@@ -50,7 +46,7 @@ public class EventController extends SwitchScenes {
 
     @FXML private ImageView eventImage;
 
-    public void getEvents() throws IOException {
+    public void participateInEvent() throws IOException {
         // pripojenie
         String url = "http://localhost:8080/api/event/participate";
         URL obj = new URL(url);
@@ -65,11 +61,7 @@ public class EventController extends SwitchScenes {
 
         // json objekt, ktory sa posiela
         JSONObject mainObject = new JSONObject();
-
-        //System.out.println(emailTemp);
-        //System.out.println(passTemp);
-        //mainObject.put("email", email.getText());
-        mainObject.put("event_id", 23);
+        mainObject.put("event_id", currentEventId);
 
         // poslanie json objektu pomocou WR
         con.setDoOutput(true);
@@ -80,9 +72,14 @@ public class EventController extends SwitchScenes {
 
         // ziskanie response code 2xx 3xx 4xx a vypisanie spravy
         int responseCode = con.getResponseCode();
-        //System.out.println("Sending 'POST' request to URL : " + url);
-        System.out.println("Post Data : " + mainObject);
-        System.out.println("Response Code : " + responseCode);
+
+        if (responseCode == 201) {
+            joinEvent.setDisable(true);
+            joinEvent.setText("Zúčastním sa");
+            showMessageDialog(null, "Pridali ste sa k udalosti.");
+        } else {
+            showMessageDialog(null, "Niečo sa pokazilo");
+        }
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
@@ -117,6 +114,8 @@ public class EventController extends SwitchScenes {
 
         JSONObject jsonObject = new JSONObject(result.toString());
 
+        editButton.setVisible(LoginController.getIsAdmin() || jsonObject.getBoolean("me_owner"));
+
         if (jsonObject.get("title_photo").toString().isEmpty()) {
             eventImage.setImage(new Image("logo.png"));
         } else {
@@ -126,25 +125,28 @@ public class EventController extends SwitchScenes {
             ByteArrayInputStream x = new ByteArrayInputStream(fileContent);
             eventImage.setImage(new Image(x));
         }
+
         LocalDateTime dateTime = ParseDate.parseDateFromDBToLocalDateTime(jsonObject.get("expiration_date").toString());
         eventName.setText(jsonObject.get("name").toString());
         time.setText(ParseDate.getTimeFromDateTime(dateTime));
         date.setText(ParseDate.parseDateFromDBToLocalDateString(jsonObject.get("expiration_date").toString()));
         participants.setText(jsonObject.get("max_participate").toString());
         description.setText(jsonObject.get("description").toString());
+        System.out.println(jsonObject.getInt("me_participate"));
+        if (jsonObject.getInt("me_participate") > 0) {
+            joinEvent.setDisable(true);
+            joinEvent.setText("Zúčastním sa");
+        }
 
         int responseCode = con.getResponseCode();
     }
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        editButton.setVisible(LoginController.getIsAdmin());
         editButton.setOnAction((e) -> switchToUpdateScreen());
         backToHome.setOnAction((event) -> back());
-        signUpHome.setOnAction((event) -> register());
-        signInHome.setOnAction((event) -> switchToLoginScreen());
         joinEvent.setOnAction((event) -> {
             try {
-                showAlert();
+                participateInEvent();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -172,35 +174,5 @@ public class EventController extends SwitchScenes {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void register() {
-        try {
-            system.getChildren().clear();
-            system.getChildren().add(FXMLLoader.load(getClass().getResource("register.fxml")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void switchToLoginScreen() {
-        try {
-            system.getChildren().clear();
-            system.getChildren().add(FXMLLoader.load(getClass().getResource("login.fxml")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void showAlert() throws IOException{
-        getEvents();
-        showMessageDialog(null, "Pridali ste sa k udalosti.");
-    }
-
-    public void addToList() {
-        //LoginController trieda = new LoginController();
-        //String token1 = trieda.getToken();
-        //System.out.print("tokeeeen: " + token1);
-        showMessageDialog(null, "Pridali ste do zoznamu obľúbených.");
     }
 }

@@ -64,7 +64,7 @@
 
             <PasswordField fx:id="password" layoutX="283.0" layoutY="329.0" prefHeight="30.0" prefWidth="227.0" promptText="Zadajte heslo" text="jako123" />
 
-            <Button fx:id="loginButton" layoutX="283.0" layoutY="377.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="227.0" style="-fx-background-color: #000066;" text="Prihlásiť sa" textFill="WHITE">
+            <Button fx:id="loginButton" layoutX="283.0" layoutY="377.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="227.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Prihlásiť sa" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="13.29230785369873" />
                 </font>
@@ -74,7 +74,7 @@
                <Font name="System Bold" size="12.0" />
             </font>
          </Label>
-         <Button fx:id="backButton" layoutX="678.0" layoutY="23.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Späť" textFill="WHITE">
+         <Button fx:id="backButton" layoutX="678.0" layoutY="23.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Späť" textFill="WHITE">
             <font>
                <Font name="System Bold" size="13.0" />
             </font>

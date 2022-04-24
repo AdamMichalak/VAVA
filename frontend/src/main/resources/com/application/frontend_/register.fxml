@@ -135,13 +135,13 @@
 
 
 
-            <Button fx:id="signUpButton" layoutX="286.0" layoutY="468.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="227.0" style="-fx-background-color: #000066;" text="Registrovať" textFill="WHITE">
+            <Button fx:id="signUpButton" layoutX="286.0" layoutY="468.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="227.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Registrovať" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="13.29230785369873" />
                 </font>
             </Button>
 
-             <Button fx:id="backButton" layoutX="678.0" layoutY="23.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Späť" textFill="WHITE">
+             <Button fx:id="backButton" layoutX="678.0" layoutY="23.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Späť" textFill="WHITE">
                 <font>
                    <Font name="System Bold" size="13.0" />
                 </font>

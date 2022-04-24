@@ -123,10 +123,11 @@ public class LoginController<url, params> extends SwitchScenes {
         if (auth.length() > 0) {
             JSONObject role = (JSONObject) auth.get(0);
             isAdmin = role.get("authority").toString().equals("ROLE_ADMIN");
-            token = jsonObject.get("jwt").toString();
         } else {
             isAdmin = false;
         }
+
+        token = jsonObject.get("jwt").toString();
 
         switchToHomeScreen();
     }

@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -94,21 +95,28 @@ public class HomeController extends SwitchScenes{
             }
 
             VBox right = new VBox();
-            right.setSpacing(10);
-            right.setAlignment(Pos.CENTER);
-            right.setPadding(new Insets(0, 20, 0, 20));
+            right.setSpacing(5);
+            right.setAlignment(Pos.BOTTOM_RIGHT);
+            right.setPadding(new Insets(20, 0, 0, 20));
             right.setMinWidth(210);
             right.setMaxWidth(210);
             Label eventExpDate = new Label();
             eventExpDate.setMinWidth(170);
+            eventExpDate.setAlignment(Pos.TOP_LEFT);
             eventExpDate.setStyle("-fx-font-size: 14; -fx-font-weight: 700;");
-            eventExpDate.setText("Dátum: " + event.get("expiration_date").toString());
-            Text eventDesc = new Text();
+            // TODO: fix backend bug
+            eventExpDate.setText("Dátum: " + event.get("expiration_date").toString().substring(0, 10));
+            Label eventDesc = new Label();
             eventDesc.setStyle("-fx-font-size: 14;");
-            eventDesc.setWrappingWidth(170);
+            eventDesc.setMinWidth(170);
+            eventDesc.setMinHeight(60);
+            eventDesc.setAlignment(Pos.TOP_LEFT);
             eventDesc.setText(event.get("description").toString());
 
             Button eventBtn = new Button("Zobraziť");
+            eventBtn.setStyle("-fx-background-color: #000066; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand");
+            eventBtn.setAlignment(Pos.BOTTOM_RIGHT);
+            eventBtn.setTextFill(Paint.valueOf("#fff"));
             eventBtn.setOnAction((e) -> {
                 currentEventId = event.getInt("event_id");
                 showInfoEvent();

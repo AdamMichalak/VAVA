@@ -44,13 +44,7 @@
                 </textFill>
             </Label>
 
-            <Button fx:id="signUpHome" layoutX="678.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Registrovať" textFill="WHITE">
-                <font>
-                    <Font name="System Bold" size="13.0" />
-                </font>
-            </Button>
-
-            <Button fx:id="backToHome" layoutX="460.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Späť" textFill="WHITE">
+            <Button fx:id="backToHome" layoutX="688.0" layoutY="23.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Späť" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="13.0" />
                 </font>
@@ -100,23 +94,18 @@
                   </font>
                </Label>
       
-                        <Button fx:id="joinEvent" layoutX="286.0" layoutY="175.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="116.0" style="-fx-background-color: #000066;" text="Zúčastním sa" textFill="WHITE">
+                        <Button fx:id="joinEvent" layoutX="252.0" layoutY="175.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="150.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Chcem sa zúčastniť" textFill="WHITE">
                       <font>
                           <Font name="System Bold" size="13.29230785369873" />
                       </font>
                   </Button>
-               <Button fx:id="editButton" layoutX="326.0" layoutY="15.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="75.0" style="-fx-background-color: #000066;" text="Upraviť" textFill="WHITE">
+               <Button fx:id="editButton" layoutX="326.0" layoutY="15.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="75.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Upraviť" textFill="WHITE">
                   <font>
                      <Font name="System Bold" size="13.29230785369873" />
                   </font>
                </Button>
             </children>
          </Pane>
-         <Button fx:id="signInHome" layoutX="569.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Prihlásiť" textFill="WHITE">
-            <font>
-               <Font name="System Bold" size="13.0" />
-            </font>
-         </Button>
         </AnchorPane>
     </children>
 </VBox>

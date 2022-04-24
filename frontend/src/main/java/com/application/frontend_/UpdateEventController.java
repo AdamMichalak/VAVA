@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.application.frontend_.Validation.validateText;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 
 public class UpdateEventController extends SwitchScenes {
@@ -109,6 +110,13 @@ public class UpdateEventController extends SwitchScenes {
                 .or(description.textProperty().isEmpty());
 
         backToHome.setOnAction((e) -> back());
+        deleteEventButton.setOnAction((e) -> {
+            try {
+                deleteEvent();
+            } catch (IOException ex) {
+                // ex.printStackTrace();
+            }
+        });
         updateEventButton.disableProperty().bind(booleanBind);
         validateText(time,"^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$");
 
@@ -142,60 +150,91 @@ public class UpdateEventController extends SwitchScenes {
     }
 
     public void deleteEvent() throws IOException {
+        // pripojenie
+        String url = "http://localhost:8080/api/event/?id=" + currentEventId;
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // definovanie typu POST / PUT / GET a jazyka JSON
+        con.setRequestMethod("DELETE");
+        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
+
+        // json objekt, ktory sa posiela
+        JSONObject mainObject = new JSONObject();
+        mainObject.put("event_id", currentEventId);
+
+        // poslanie json objektu pomocou WR
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.flush();
+        wr.close();
+
+        // ziskanie response code 2xx 3xx 4xx a vypisanie spravy
+        int responseCode = con.getResponseCode();
+
+        if (responseCode == 200) {
+            showMessageDialog(null, "Udalosť úspešne odstránená");
+        } else if (responseCode == 401) {
+            showMessageDialog(null, "Túto akciu nemôžete vykonať");
+        } else {
+            showMessageDialog(null, "Niečo sa pokazilo");
+        }
+
         switchToHomeScreen();
     }
 
     public void updateEvent() throws IOException {
         // pripojenie
-//        String url = "http://localhost:8080/api/event/create";
-//        URL obj = new URL(url);
-//        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-//
-//        // definovanie typu POST / PUT / GET a jazyka JSON
-//        con.setRequestMethod("POST");
-//        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-//        con.setRequestProperty("Content-Type","application/json");
-//
-//        // json objekt, ktory sa posiela
-//        JSONObject mainObject = new JSONObject();
-//        mainObject.put("name", name.getText());
-//        mainObject.put("description", description.getText());
-//        String str = date.getValue() + " " + time.getText();
-//        mainObject.put("expiration_date", str);
-//        mainObject.put("max_participate", Integer.parseInt(maxParticipants.getText()));
-//        mainObject.put("interest_id", 1);
-//        mainObject.put("title_photo", base64);
-//
-//        JSONObject tokenObject = new JSONObject();
-//        tokenObject.put("jwt", LoginController.getToken());
-//
-//        con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
-//        con.setDoOutput(true);
-//        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-//        wr.writeBytes(mainObject.toString());
-//        wr.flush();
-//        wr.close();
-//
-//
-//        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//        String output;
-//        StringBuffer response = new StringBuffer();
-//
-//        while ((output = in.readLine()) != null) {
-//            response.append(output);
-//        }
-//
-//
-//        in.close();
-//        try {
-//            JSONObject jsonObject = new JSONObject(response.toString());
-//            JSONArray nameArray = jsonObject.names();
-//            JSONArray tokenJSON = jsonObject.toJSONArray(nameArray);
-//            String token = tokenJSON.toString();
-//        } catch (JSONException e) {
-//            System.out.println("");
-//        }
-//
+        String url = "http://localhost:8080/api/event";
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // definovanie typu POST / PUT / GET a jazyka JSON
+        con.setRequestMethod("PUT");
+        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        con.setRequestProperty("Content-Type","application/json");
+
+        // json objekt, ktory sa posiela
+        JSONObject mainObject = new JSONObject();
+        mainObject.put("id", currentEventId);
+        mainObject.put("name", name.getText());
+        mainObject.put("description", description.getText());
+        String str = date.getValue() + " " + time.getText();
+        mainObject.put("expiration_date", str);
+        mainObject.put("max_participate", Integer.parseInt(maxParticipants.getText()));
+        mainObject.put("interest_id", 1);
+        mainObject.put("title_photo", base64);
+
+        JSONObject tokenObject = new JSONObject();
+        tokenObject.put("jwt", LoginController.getToken());
+
+        con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(mainObject.toString());
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String output;
+        StringBuffer response = new StringBuffer();
+
+        while ((output = in.readLine()) != null) {
+            response.append(output);
+        }
+
+
+        in.close();
+        try {
+            JSONObject jsonObject = new JSONObject(response.toString());
+            JSONArray nameArray = jsonObject.names();
+            JSONArray tokenJSON = jsonObject.toJSONArray(nameArray);
+            String token = tokenJSON.toString();
+        } catch (JSONException e) {
+            System.out.println("");
+        }
+
         back();
     }
 
