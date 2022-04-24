@@ -24,4 +24,5 @@ public class EventDetail{
 	private String last_name;
 	private Integer participation_count;
 	private Integer me_participate;
+	private boolean me_owner;
 }

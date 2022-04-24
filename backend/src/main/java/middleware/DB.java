@@ -460,7 +460,7 @@ public class DB {
 
 	}
 
-	public static Object get_event_detail(Integer event_id, Integer user_id){
+	public static EventDetail get_event_detail(Integer event_id, Integer user_id){
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
@@ -468,15 +468,18 @@ public class DB {
 		}
 		String sql = "SELECT events.id, creator_id, name, description, title_photo, max_participate, created_at, updated_at, expiration_date,\n" +
 				"i.interest_name, u.email, u.first_name, u.last_name, (SELECT count(id) FROM participation p where p.event_id=?) participation_count,\n" +
-				"(SELECT count(id) FROM participation p where p.user_id=?) me_participate\n" +
+				"(SELECT count(id) FROM participation p where p.user_id=? and p.event_id=?) me_participate,\n"+
+				"(CASE WHEN (creator_id=?) THEN true ELSE false END) as me_owner\n"+
 				"FROM events JOIN interests i on events.interest_id = i.id\n" +
 				"JOIN users u on events.creator_id = u.id\n" +
 				"WHERE events.id=?";
 		try{
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, event_id);
-			statement.setInt(2, user_id);
-			statement.setInt(3, event_id);
+			statement.setInt(2, event_id);
+			statement.setInt(3, user_id);
+			statement.setInt(4, user_id);
+			statement.setInt(5, event_id);
 			ResultSet rs =  statement.executeQuery();
 
 			rs.next();
@@ -498,8 +501,9 @@ public class DB {
 			model.setInterest_name(rs.getString("interest_name"));
 			model.setFirst_name(rs.getString("first_name"));
 			model.setLast_name(rs.getString("last_name"));
-			model.setParticipation_count(rs.getInt("max_participate"));
+			model.setParticipation_count(rs.getInt("participation_count"));
 			model.setMe_participate(rs.getInt("me_participate"));
+			model.setMe_owner(rs.getBoolean("me_owner"));
 
 			return model;
 

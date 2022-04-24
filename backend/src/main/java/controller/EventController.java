@@ -82,9 +82,9 @@ public class EventController {
 	@GetMapping("/detail")
 	public ResponseEntity<Object> get_event_detail(@RequestParam Integer event_id, @RequestHeader("Authorization") String token){
 		Integer user_id = (jwtTokenUtil.extractId(token.substring(7)));
-		Object response = DB.get_event_detail(event_id, user_id);
-		if(response==null) return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		return ResponseEntity.ok(response);
+		EventDetail model = DB.get_event_detail(event_id, user_id);
+		if(model==null) return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		return ResponseEntity.ok(model);
 	}
 
 	@GetMapping("/messages")
