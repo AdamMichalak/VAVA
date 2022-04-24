@@ -1,42 +1,81 @@
 package com.application.frontend_;
 
 import com.application.frontend_.LoginController;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.ResourceBundle;
+import java.io.File;
+import java.io.IOException;
+
+import static com.application.frontend_.Validation.validateText;
+
 
 public class CreateEventController extends SwitchScenes {
     @FXML
     private VBox system;
 
-    @FXML private TextField nazov;
-    @FXML private TextField email;
-    @FXML private TextField timePicker;
-    @FXML private DatePicker datePicker;
-    @FXML private TextField eventAddress;
+    @FXML private TextField name;
+    @FXML private TextField maxParticipants;
+    @FXML private TextField time;
+    @FXML private DatePicker date;
     @FXML private TextField description;
-
-    @FXML private Button createEventButton;
-
+    @FXML private Button createEventButton, addPhotoButton;
+    @FXML private ImageView eventImage;
+    final FileChooser fileChooser = new FileChooser();
+    private String base64 = null;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        BooleanBinding booleanBind = name.textProperty().isEmpty()
+                .or(maxParticipants.textProperty().isEmpty())
+                .or(time.textProperty().isEmpty())
+                .or(date.valueProperty().isNull())
+                .or(description.textProperty().isEmpty());
+
+        createEventButton.disableProperty().bind(booleanBind);
+        validateText(time,"^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$");
+
+        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
+        FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+        fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+
+        addPhotoButton.setOnAction((event) -> {
+            File file = fileChooser.showOpenDialog(null);
+
+            if (file != null) {
+                Image img = new Image(file.toURI().toString());
+                eventImage.setImage(img);
+
+                try {
+                    byte[] fileContent = Files.readAllBytes(file.toPath());
+                    base64 = Base64.getEncoder().encodeToString(fileContent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
         createEventButton.setOnAction((event) -> {
             try {
                 createNewEvent();
@@ -59,48 +98,39 @@ public class CreateEventController extends SwitchScenes {
 
         // json objekt, ktory sa posiela
         JSONObject mainObject = new JSONObject();
-        //System.out.print(nazov.getText());
-        mainObject.put("name", nazov.getText());
+        mainObject.put("name", name.getText());
         mainObject.put("description", description.getText());
-        //mainObject.put("email", email.getText());
-        //mainObject.put("expiration_date2", timePicker.getText());
-        mainObject.put("expiration_date", datePicker.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        //mainObject.put("address", eventAddress.getText());
-        mainObject.put("max_participate", 5);
+        String str = date.getValue() + " " + time.getText();
+        mainObject.put("expiration_date", str);
+        mainObject.put("max_participate", Integer.parseInt(maxParticipants.getText()));
         mainObject.put("interest_id", 1);
-        com.application.frontend_.LoginController trieda = new LoginController();
-        String token1 = trieda.getToken();
-        // [" token "]
+        mainObject.put("title_photo", base64);
+
+        String token1 = LoginController.getToken();
         token1 = token1.substring(2);
         token1 = token1.substring(0, token1.length() - 1);
         token1 = token1.substring(0, token1.length() - 1);
-        System.out.print("tokeeeen: " + token1);
+
         JSONObject tokenObject = new JSONObject();
         tokenObject.put("jwt", token1);
-        //con.setRequestProperty ("Authorization", "Bearer " + token1.toString());
+
         con.setRequestProperty ("Authorization", "Bearer "+token1.toString());
-        // Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbm5hLnlAZ21haWwuY29tIiwiaWQiOjksImV4cCI6MTY1MDUwMDQyMCwiaWF0IjoxNjUwNDY0NDIwfQ.pEMCiL3oyCujjltAR5AbixNFZIvGx3qMbbahnNIFXnA
-        // poslanie json objektu pomocou WR
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
         wr.writeBytes(mainObject.toString());
         wr.flush();
         wr.close();
 
-        // ziskanie response code 2xx 3xx 4xx a vypisanie spravy
-        int responseCode = con.getResponseCode();
-        //System.out.println("Sending 'POST' request to URL : " + url);
-        System.out.println("Post Data : " + mainObject);
-        System.out.println("Response Code : " + responseCode);
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
         StringBuffer response = new StringBuffer();
 
         while ((output = in.readLine()) != null) {
             response.append(output);
         }
+
+
         in.close();
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
@@ -109,7 +139,6 @@ public class CreateEventController extends SwitchScenes {
             String token = tokenJSON.toString();
         } catch (JSONException e) {
             System.out.println("");
-            //e.printStackTrace();
         }
 
         switchToHomeScreen();

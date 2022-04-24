@@ -12,8 +12,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 public class DB {
@@ -33,9 +36,11 @@ public class DB {
 			if(o instanceof Long && clazz == java.lang.Integer.class){
 				return clazz.cast(((Long) o).intValue());
 			}
+
 			return null;
 		}
 	}
+
 	public static JSONObject get_events(String name, String exp_date, String[] interests_id, Integer page)
 	{
 		try{
@@ -293,22 +298,27 @@ public class DB {
 			return false;
 		}
 		try{
-			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 			String sql = "INSERT INTO events (creator_id, name, interest_id, description, title_photo, max_participate, created_at, updated_at, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, request.getCreator_id());
 			statement.setString(2, request.getName());
 			statement.setInt(3, request.getInterest_id());
 			statement.setString(4, request.getDescription());
-			statement.setString(5, request.getTitle_photo());
+			if (request.getTitle_photo() == null) {
+				statement.setBytes(5,null);
+			} else {
+				statement.setBytes(5, Base64.getDecoder().decode(request.getTitle_photo()));
+			}
 			statement.setInt(6, request.getMax_participate());
 			statement.setDate(7, new java.sql.Date(new java.util.Date().getTime()));
 			statement.setDate(8, new java.sql.Date(new java.util.Date().getTime()));
-			statement.setDate(9, new java.sql.Date(formatter.parse(request.getExpiration_date()).getTime()));
+			DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime dateTime = LocalDateTime.parse(request.getExpiration_date(), frm);
+			statement.setTimestamp(9, java.sql.Timestamp.valueOf(dateTime));
 			statement.execute();
 			return true;
 		}
-		catch (SQLException | ParseException e){
+		catch (SQLException e){
 			return false;
 		}
 	}
@@ -371,7 +381,30 @@ public class DB {
 			statement.setInt(2, user_id);
 			statement.setInt(3, event_id);
 			ResultSet rs =  statement.executeQuery();
-			return resultset_to_model(rs, EventDetail.class).get(0);
+
+			rs.next();
+			EventDetail model = new EventDetail();
+			model.setId(rs.getInt("id"));
+			model.setName(rs.getString("name"));
+			model.setDescription(rs.getString("description"));
+
+			if (rs.getBytes("title_photo") == null) {
+				model.setTitle_photo("");
+			} else {
+				model.setTitle_photo(Base64.getEncoder().encodeToString(rs.getBytes("title_photo")));
+			}
+
+			model.setMax_participate(rs.getInt("max_participate"));
+			model.setCreated_at(rs.getDate("created_at"));
+			model.setUpdated_at(rs.getDate("updated_at"));
+			model.setExpiration_date(rs.getDate("expiration_date"));
+			model.setInterest_name(rs.getString("interest_name"));
+			model.setFirst_name(rs.getString("first_name"));
+			model.setLast_name(rs.getString("last_name"));
+			model.setParticipation_count(rs.getInt("max_participate"));
+			model.setMe_participate(rs.getInt("me_participate"));
+
+			return model;
 
 
 		} catch (Exception e){

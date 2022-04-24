@@ -11,6 +11,7 @@ module com.application.frontend_ {
     requires eu.hansolo.tilesfx;
     requires org.json;
     requires java.desktop;
+    requires java.logging;
 
     opens com.application.frontend_ to javafx.fxml;
     exports com.application.frontend_;

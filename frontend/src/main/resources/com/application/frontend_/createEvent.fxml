@@ -4,6 +4,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="system" prefHeight="600" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.application.frontend_.CreateEventController">
+<VBox fx:id="system" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.application.frontend_.CreateEventController">
     <children>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #FFFFFF;" VBox.vgrow="ALWAYS">
 
@@ -53,15 +54,15 @@
                     <Font name="System Bold" size="13.29230785369873" />
                 </font>
             </Label>
-            <TextField fx:id="nazov" layoutX="135.0" layoutY="170.0" prefHeight="30.0" prefWidth="227.0" promptText="Zadajte názov" />
+            <TextField fx:id="name" layoutX="135.0" layoutY="170.0" prefHeight="30.0" prefWidth="227.0" promptText="Zraz kyselinárov" />
 
 
-            <Label fx:id="emailText" layoutX="135.0" layoutY="206.0" prefHeight="21.0" prefWidth="58.0" text="E-mail">
+            <Label fx:id="emailText" layoutX="135.0" layoutY="206.0" prefHeight="21.0" prefWidth="227.0" text="Maximálny počet úastníkov">
                 <font>
                     <Font name="System Bold" size="13.29230785369873" />
                 </font>
             </Label>
-            <TextField fx:id="email" layoutX="135.0" layoutY="228.0" prefHeight="30.0" prefWidth="227.0" promptText="Zadajte e-mail" />
+            <TextField fx:id="maxParticipants" layoutX="135.0" layoutY="228.0" prefHeight="30.0" prefWidth="227.0" promptText="10" />
 
 
             <Label fx:id="timePickerText" layoutX="135.0" layoutY="264.0" prefHeight="21.0" prefWidth="58.0" text="Čas">
@@ -69,7 +70,7 @@
                     <Font name="System Bold" size="13.29230785369873" />
                 </font>
             </Label>
-            <TextField fx:id="timePicker" layoutX="135.0" layoutY="285.0" prefHeight="30.0" prefWidth="227.0" promptText="Zadajte čas" />
+            <TextField fx:id="time" layoutX="135.0" layoutY="285.0" prefHeight="30.0" prefWidth="227.0" promptText="Zadajte čas" />
 
 
             <Label fx:id="datePickerText" layoutX="135.0" layoutY="323.0" text="Dátum konania">
@@ -77,30 +78,30 @@
                     <Font name="System Bold" size="13.29230785369873" />
                 </font>
             </Label>
-            <DatePicker fx:id="datePicker" layoutX="135.0" layoutY="345.0" prefHeight="30.0" prefWidth="227.0" />
+            <DatePicker fx:id="date" layoutX="135.0" layoutY="345.0" prefHeight="30.0" prefWidth="227.0" promptText="25.10.2022" />
 
 
-            <Label fx:id="adresaText" layoutX="435.0" layoutY="139.0" prefHeight="62.0" prefWidth="218.0" text="Adresa (preferovaný formát : Ulica, č.domu, PSČ, Mesto)" wrapText="true">
+            <Label fx:id="popisText" layoutX="431.0" layoutY="146.0" text="Popis">
                 <font>
                     <Font name="System Bold" size="13.29230785369873" />
                 </font>
             </Label>
-            <TextField fx:id="eventAddress" layoutX="430.0" layoutY="201.0" prefHeight="30.0" prefWidth="227.0" promptText="Zadajte adresu" />
+            <TextField fx:id="description" alignment="TOP_LEFT" layoutX="428.0" layoutY="170.0" prefHeight="84.0" prefWidth="227.0" promptText="Všetci ste vítaní" />
 
 
-            <Label fx:id="popisText" layoutX="432.0" layoutY="248.0" text="Popis">
-                <font>
-                    <Font name="System Bold" size="13.29230785369873" />
-                </font>
-            </Label>
-            <TextField fx:id="description" alignment="TOP_LEFT" layoutX="430.0" layoutY="269.0" prefHeight="83.0" prefWidth="227.0" promptText="Zadajte popis udalosti." />
-
-
-            <Button fx:id="createEventButton" layoutX="286.0" layoutY="430.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="227.0" style="-fx-background-color: #000066;" text="Vytvoriť udalosťfsad fads" textFill="WHITE">
+            <Button fx:id="createEventButton" layoutX="293.0" layoutY="466.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="227.0" style="-fx-background-color: #000066;" text="Vytvoriť udalosť" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="13.29230785369873" />
                 </font>
             </Button>
+
+             <Button fx:id="addPhotoButton" layoutX="429.0" layoutY="264.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="227.0" style="-fx-background-color: #000066;" text="Pridať fotku" textFill="WHITE">
+                <font>
+                   <Font name="System Bold" size="13.29230785369873" />
+                </font>
+             </Button>
+
+            <ImageView fx:id="eventImage" fitHeight="130.0" fitWidth="227.0" layoutX="429.0" layoutY="308.0" pickOnBounds="true" preserveRatio="true" />
         </AnchorPane>
     </children>
 </VBox>

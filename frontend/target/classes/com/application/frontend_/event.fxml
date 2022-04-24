@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.control.ScrollPane?>
-<VBox fx:id="system"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.application.frontend_.EventController"
-      prefHeight="600" prefWidth="800">
+<VBox fx:id="system" prefHeight="600" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.application.frontend_.EventController">
     <children>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #FFFFFF;" VBox.vgrow="ALWAYS">
 
@@ -71,11 +67,7 @@
                 </font>
             </Label>
 
-            <ImageView fitHeight="160.0" fitWidth="433.0" layoutX="100.0" layoutY="141.0" pickOnBounds="true" preserveRatio="true" >
-                <image>
-                    <Image url="@/logo.png" />
-                </image>
-            </ImageView>
+            <ImageView fx:id="eventImage" fitHeight="206.0" fitWidth="236.0" layoutX="46.0" layoutY="121.0" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="date" layoutX="320.0" layoutY="122.0" prefHeight="20.0" prefWidth="425.0" style="-fx-background-color: #eaedf0;" text="Dátum 01. januára 1999" />
             <Label fx:id="time" layoutX="320.0" layoutY="142.0" prefHeight="20.0" prefWidth="425.0" style="-fx-background-color: #eaedf0;" text="Čas o 17:00" />
             <Label fx:id="participants" layoutX="320.0" layoutY="162.0" prefHeight="26.0" prefWidth="425.0" style="-fx-background-color: #eaedf0;" text="Max. počet: 5" />
