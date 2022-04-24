@@ -155,6 +155,12 @@ public class DB {
 				tmp.put("max_participants", result.getInt("max_participate"));
 				tmp.put("expiration_date", result.getDate("expiration_date"));
 				tmp.put("created_at", result.getDate("created_at"));
+
+				if (result.getBytes("title_photo") == null) {
+					tmp.put("title_photo", "");
+				} else {
+					tmp.put("title_photo", Base64.getEncoder().encodeToString(result.getBytes("title_photo")));
+				}
 				events.put(tmp);
 			}
 		}
