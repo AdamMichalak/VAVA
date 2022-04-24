@@ -269,7 +269,7 @@ public class DB {
 		} catch (SQLException e) {
 			return null;
 		}
-		String sql = 	"SELECT name, e.id FROM event_user eu JOIN events e ON eu.event_id = e.id WHERE eu.user_id = ?";
+		String sql = 	"SELECT name, e.id FROM participation eu JOIN events e ON eu.event_id = e.id WHERE eu.user_id = ?";
 
 		PreparedStatement statement;
 		try {
