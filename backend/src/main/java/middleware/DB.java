@@ -41,6 +41,60 @@ public class DB {
 		}
 	}
 
+	public static JSONObject get_page_count(String name, String exp_date, String[] interests_id)
+	{
+		try{
+			if(connection==null) connect();
+		} catch (SQLException e){
+			return null;
+		}
+		String sql = 	"SELECT CEIL(COUNT(*)/4.0) as count FROM events" +
+						" WHERE expiration_date > NOW() AND expiration_date < ?" +
+						" AND NAME ILIKE ?";
+
+		if(interests_id != null) {
+			String sql_array;
+			sql_array = " AND interest_id  IN (";
+			for (String interest : interests_id) {
+				sql_array += "?,";
+			}
+			sql_array = sql_array.substring(0, sql_array.length() - 1) + ")";
+			sql += sql_array;
+		}
+		PreparedStatement statement;
+		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+		try {
+			statement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			return null;
+		}
+		try {
+			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setString(2,"%"+name+"%");
+			int count = 3;
+			if(interests_id != null)
+			{
+				for(String interest :interests_id)
+				{
+					statement.setInt(count,Integer.parseInt(interest));
+					count++;
+				}
+			}
+		} catch (SQLException | ParseException e) {
+			return null;
+		}
+		try {
+			ResultSet result = statement.executeQuery();
+			JSONObject ret = new JSONObject();
+			result.next();
+			ret.put("page_count", result.getInt("count"));
+			return ret;
+		} catch (SQLException e) {
+			return null;
+		}
+
+	}
+
 	public static JSONObject get_events(String name, String exp_date, String[] interests_id, Integer page)
 	{
 		try{
@@ -89,8 +143,7 @@ public class DB {
 		JSONArray events = new JSONArray();
 		try {
 			ResultSet result = statement.executeQuery();
-			while(result.next())
-			{
+			while (result.next()) {
 				JSONObject tmp = new JSONObject();
 				tmp.put("creator_first_name", result.getString("first_name"));
 				tmp.put("creator_last_name", result.getString("last_name"));
@@ -104,43 +157,44 @@ public class DB {
 				tmp.put("created_at", result.getDate("created_at"));
 				events.put(tmp);
 			}
-			sql = 	"SELECT CEIL(COUNT(*)/4.0) as count FROM events" +
-					" WHERE expiration_date > NOW() AND expiration_date < ?" +
-					" AND NAME ILIKE ?";
-			if(interests_id != null) {
-				sql += sql_array;
-			}
-			try {
-				statement = connection.prepareStatement(sql);
-			} catch (SQLException e) {
-				return null;
-			}
-			try {
-				statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
-				statement.setString(2,"%"+name+"%");
-				int count = 3;
-				if(interests_id != null)
+		}
+		catch (SQLException e) {
+			return null;
+		}
+		sql = 	"SELECT CEIL(COUNT(*)/4.0) as count FROM events" +
+				" WHERE expiration_date > NOW() AND expiration_date < ?" +
+				" AND NAME ILIKE ?";
+		if(interests_id != null) {
+			sql += sql_array;
+		}
+		try {
+			statement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			return null;
+		}
+		try {
+			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setString(2,"%"+name+"%");
+			int count = 3;
+			if(interests_id != null)
+			{
+				for(String interest :interests_id)
 				{
-					for(String interest :interests_id)
-					{
-						statement.setInt(count,Integer.parseInt(interest));
-						count++;
-					}
+					statement.setInt(count,Integer.parseInt(interest));
+					count++;
 				}
-			} catch (SQLException | ParseException e) {
-				return null;
 			}
-			try {
-				result = statement.executeQuery();
-				JSONObject ret = new JSONObject();
-				result.next();
-				ret.put("current_page", page);
-				ret.put("page_count", result.getInt("count"));
-				ret.put("events", events);
-				return ret;
-			} catch (SQLException e) {
-				return null;
-			}
+		} catch (SQLException | ParseException e) {
+			return null;
+		}
+		try {
+			ResultSet result = statement.executeQuery();
+			JSONObject ret = new JSONObject();
+			result.next();
+			ret.put("current_page", page);
+			ret.put("page_count", result.getInt("count"));
+			ret.put("events", events);
+			return ret;
 		} catch (SQLException e) {
 			return null;
 		}
