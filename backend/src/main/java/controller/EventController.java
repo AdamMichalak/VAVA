@@ -1,11 +1,13 @@
 package controller;
 
+import io.jsonwebtoken.Claims;
 import middleware.DB;
 import model.EventDetail;
 import model.Interest;
 import model.MyUserSecurity;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +21,7 @@ import javax.validation.Valid;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 @RestController
@@ -89,6 +92,20 @@ public class EventController {
 		Object response = DB.get_messages(event_id);
 		if(response==null) return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		return ResponseEntity.ok(response);
+	}
+
+	@DeleteMapping()
+	public ResponseEntity<Object> delete_event(@RequestParam(value = "id") Integer id,
+											   @RequestHeader("Authorization") String token){
+		Integer user_id = (jwtTokenUtil.extractId(token.substring(7)));
+		String authorities = (jwtTokenUtil.extract_authorities(token.substring(7)));
+		String filters = null;
+		if(authorities.contains("ROLE_ADMIN")) filters = String.format("id=%d", id);
+		else filters = String.format("id=%d and creator_id=%d;", id, user_id);
+		int result = DB.remove_event(filters);
+		if (result==0) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+		else if(result>0) return new ResponseEntity<>(null, HttpStatus.OK);
+		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
 

@@ -563,6 +563,21 @@ public class DB {
 		}
 	}
 
+	public static int remove_event(String filters){
+		try {
+			if (connection == null) connect();
+		} catch (SQLException e) {
+			return -1;
+		}
+		String sql = "DELETE FROM events where "+filters;
+		try{
+			PreparedStatement statement = connection.prepareStatement(sql);
+			return statement.executeUpdate();
+		} catch (Exception e){
+			return -1;
+		}
+	}
+
 
 
 }

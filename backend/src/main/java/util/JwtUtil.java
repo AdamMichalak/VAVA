@@ -3,19 +3,24 @@ package util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtUtil {
 
     private String SECRET_KEY = "tokenons";
 
-    public String extractUsername(String token) {
+
+	public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -32,6 +37,10 @@ public class JwtUtil {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+	public String extract_authorities(String token) {
+		Claims claims = extractAllClaims(token);
+		return claims.get("authorities").toString();
+	}
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
@@ -41,12 +50,17 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails, Integer id) {
-        Map<String, Object> claims = new HashMap<>();
+		String authorities = userDetails.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.joining(","));
+
+		Map<String, Object> claims = new HashMap<>();
 		claims.put("id", id);
-        return createToken(claims, userDetails.getUsername());
+		claims.put("authorities", authorities);
+        return createToken(claims, userDetails.getUsername(), authorities);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, String subject, String authorities) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
