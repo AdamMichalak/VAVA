@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 abstract class SwitchScenes implements Initializable {
+    public static Integer currentEventId;
 
     /**
      * Runs procedures in inherited classes

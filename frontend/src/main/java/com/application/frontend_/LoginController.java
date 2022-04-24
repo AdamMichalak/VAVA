@@ -31,12 +31,8 @@ public class LoginController<url, params> extends SwitchScenes {
 
     @FXML private Button signUp;
 
-    private String token;
+    private static String token;
 
-    private static String tokenObject = new String();
-    /**
-     * After clicking gui objects calls another procedures
-     */
     public void initialize(URL url, ResourceBundle resourceBundl) {
         loginButton.setOnAction((event) -> {
             try {
@@ -110,27 +106,20 @@ public class LoginController<url, params> extends SwitchScenes {
         JSONObject jsonObject = new JSONObject(response.toString());
         JSONArray nameArray = jsonObject.names();
         JSONArray tokenJSON = jsonObject.toJSONArray(nameArray);
-        System.out.println("Token :) -> " + tokenJSON.toString());
-        this.token = tokenJSON.toString();
-        setToken(this.token);
+
+        token = tokenJSON.get(0).toString();
+
         switchToHomeScreen();
     }
 
-    public void setToken(String token){
-        this.tokenObject = token;
-        System.out.println("Token2 :) -> " + tokenObject);
-        getToken();
-    }
-
     public static String getToken(){
-        System.out.println("Token3 :) -> " + tokenObject);
-        return tokenObject;
+        return token;
     }
 
     public void switchToHomeScreen() {
         try {
             system.getChildren().clear();
-            system.getChildren().add(FXMLLoader.load(getClass().getResource("home_.fxml")));
+            system.getChildren().add(FXMLLoader.load(getClass().getResource("home.fxml")));
         } catch (IOException e) {
             e.printStackTrace();
         }

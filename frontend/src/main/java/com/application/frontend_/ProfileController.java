@@ -40,14 +40,7 @@ public class ProfileController extends SwitchScenes {
         con.setRequestProperty("Content-Type","application/json");
         con.setUseCaches(false);
         con.setAllowUserInteraction(false);
-        LoginController trieda = new LoginController();
-        String token1 = trieda.getToken();
-        // [" token "]
-        token1 = token1.substring(2);
-        token1 = token1.substring(0, token1.length() - 1);
-        token1 = token1.substring(0, token1.length() - 1);
-        //con.setRequestProperty ("Authorization", "Bearer " + token1.toString());
-        con.setRequestProperty ("Authorization", "Bearer "+ token1.toString());
+        con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
         con.connect();
 
         System.out.println(con.getContent().toString());
@@ -58,7 +51,7 @@ public class ProfileController extends SwitchScenes {
         while((line = reader.readLine()) != null) {
             result.append(line);
         }
-        System.out.println(result.toString());
+
         JSONObject jsonObject = new JSONObject(result.toString());
         NameSecondName.setText(jsonObject.get("first_name").toString() + " " + jsonObject.get("last_name").toString());
         email.setText(jsonObject.get("email").toString());
@@ -76,12 +69,7 @@ public class ProfileController extends SwitchScenes {
         con.setRequestProperty("Content-Type","application/json");
         con.setUseCaches(false);
         con.setAllowUserInteraction(false);
-        LoginController trieda = new LoginController();
-        String token1 = trieda.getToken();
-        token1 = token1.substring(2);
-        token1 = token1.substring(0, token1.length() - 1);
-        token1 = token1.substring(0, token1.length() - 1);
-        con.setRequestProperty ("Authorization", "Bearer "+ token1.toString());
+        con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
         con.connect();
 
 

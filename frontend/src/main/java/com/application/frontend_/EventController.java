@@ -24,9 +24,6 @@ import java.util.ResourceBundle;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class EventController extends SwitchScenes {
-    Image img = new Image("file:logo.png");
-    ImageView imageView = new ImageView(img);
-
     @FXML
     private VBox system;
 
@@ -61,14 +58,7 @@ public class EventController extends SwitchScenes {
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
         con.setRequestProperty("Content-Type","application/json");
 
-        LoginController trieda = new LoginController();
-        String token1 = trieda.getToken();
-
-        token1 = token1.substring(2);
-        token1 = token1.substring(0, token1.length() - 1);
-        token1 = token1.substring(0, token1.length() - 1);
-
-        con.setRequestProperty ("Authorization", "Bearer "+ token1.toString());
+        con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
 
         // json objekt, ktory sa posiela
         JSONObject mainObject = new JSONObject();
@@ -103,8 +93,7 @@ public class EventController extends SwitchScenes {
     }
 
     public void getItems() throws IOException {
-        String id = "23";
-        String url = "http://localhost:8080/api/event/detail?event_id=" + id;
+        String url = "http://localhost:8080/api/event/detail?event_id=" + currentEventId;
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -113,15 +102,7 @@ public class EventController extends SwitchScenes {
         con.setRequestProperty("Content-Type","application/json");
         con.setUseCaches(false);
         con.setAllowUserInteraction(false);
-
-        LoginController trieda = new LoginController();
-        String token1 = trieda.getToken();
-
-        token1 = token1.substring(2);
-        token1 = token1.substring(0, token1.length() - 1);
-        token1 = token1.substring(0, token1.length() - 1);
-
-        con.setRequestProperty ("Authorization", "Bearer "+ token1.toString());
+        con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
         con.connect();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -132,8 +113,6 @@ public class EventController extends SwitchScenes {
         }
 
         JSONObject jsonObject = new JSONObject(result.toString());
-        //setID(jsonObject.get("id").toString());
-        //System.out.println(jsonObject.get("id").toString());
 
         if (jsonObject.get("title_photo").toString().isEmpty()) {
             eventImage.setImage(new Image("logo.png"));
@@ -153,7 +132,7 @@ public class EventController extends SwitchScenes {
         int responseCode = con.getResponseCode();
     }
 
-    public void initialize(URL url, ResourceBundle resourceBundl) {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         backToHome.setOnAction((event) -> back());
         signUpHome.setOnAction((event) -> register());
         signInHome.setOnAction((event) -> switchToLoginScreen());

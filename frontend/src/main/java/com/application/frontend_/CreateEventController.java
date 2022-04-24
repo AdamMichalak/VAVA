@@ -55,9 +55,8 @@ public class CreateEventController extends SwitchScenes {
         createEventButton.disableProperty().bind(booleanBind);
         validateText(time,"^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$");
 
-        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
-        FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
-        fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG", "PNG files (*.png)", "*.PNG");
+        fileChooser.getExtensionFilters().addAll(extFilterJPG);
 
         addPhotoButton.setOnAction((event) -> {
             File file = fileChooser.showOpenDialog(null);
@@ -106,15 +105,10 @@ public class CreateEventController extends SwitchScenes {
         mainObject.put("interest_id", 1);
         mainObject.put("title_photo", base64);
 
-        String token1 = LoginController.getToken();
-        token1 = token1.substring(2);
-        token1 = token1.substring(0, token1.length() - 1);
-        token1 = token1.substring(0, token1.length() - 1);
-
         JSONObject tokenObject = new JSONObject();
-        tokenObject.put("jwt", token1);
+        tokenObject.put("jwt", LoginController.getToken());
 
-        con.setRequestProperty ("Authorization", "Bearer "+token1.toString());
+        con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
         wr.writeBytes(mainObject.toString());
