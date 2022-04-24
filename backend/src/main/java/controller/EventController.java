@@ -107,5 +107,19 @@ public class EventController {
 		else if(result>0) return new ResponseEntity<>(null, HttpStatus.OK);
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	@PutMapping()
+	public ResponseEntity<Object> update_event(@RequestBody @Valid CreateEvent request,
+											   @RequestHeader("Authorization") String token){
+		Integer user_id = (jwtTokenUtil.extractId(token.substring(7)));
+		String authorities = (jwtTokenUtil.extract_authorities(token.substring(7)));
+		String filters = null;
+		if(authorities.contains("ROLE_ADMIN")) filters = String.format("id=%d", request.getId());
+		else filters = String.format("id=%d and creator_id=%d;", request.getId(), user_id);
+		int result = DB.update_event(request, filters);
+		if (result==0) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+		else if(result>0) return new ResponseEntity<>(null, HttpStatus.OK);
+		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }
 

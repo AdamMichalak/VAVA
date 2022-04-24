@@ -578,6 +578,35 @@ public class DB {
 		}
 	}
 
+	public static int update_event(CreateEvent request, String filters){
+		try {
+			if (connection == null) connect();
+		} catch (SQLException e) {
+			return -1;
+		}
+		try{
+			String sql = "UPDATE events SET name = ?, interest_id = ?, description = ?, title_photo = ?, max_participate = ?, updated_at = ?, expiration_date = ? WHERE "+filters;
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setString(1, request.getName());
+			statement.setInt(2, request.getInterest_id());
+			statement.setString(3, request.getDescription());
+			if (request.getTitle_photo() == null) {
+				statement.setBytes(4,null);
+			} else {
+				statement.setBytes(4, Base64.getDecoder().decode(request.getTitle_photo()));
+			}
+			statement.setInt(5, request.getMax_participate());
+			statement.setDate(6, new java.sql.Date(new java.util.Date().getTime()));
+			DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime dateTime = LocalDateTime.parse(request.getExpiration_date(), frm);
+			statement.setTimestamp(7, java.sql.Timestamp.valueOf(dateTime));
+			return statement.executeUpdate();
+		}
+		catch (SQLException e){
+			return -1;
+		}
+	}
+
 
 
 }
