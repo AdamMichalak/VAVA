@@ -16,6 +16,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -30,6 +31,8 @@ public class EventController extends SwitchScenes {
     @FXML private Button backToHome;
 
     @FXML private Button signUpHome;
+
+    @FXML private Button editButton;
 
     @FXML private Button signInHome;
 
@@ -123,9 +126,10 @@ public class EventController extends SwitchScenes {
             ByteArrayInputStream x = new ByteArrayInputStream(fileContent);
             eventImage.setImage(new Image(x));
         }
-
+        LocalDateTime dateTime = ParseDate.parseDateFromDBToLocalDateTime(jsonObject.get("expiration_date").toString());
         eventName.setText(jsonObject.get("name").toString());
-        date.setText(jsonObject.get("expiration_date").toString());
+        time.setText(ParseDate.getTimeFromDateTime(dateTime));
+        date.setText(ParseDate.parseDateFromDBToLocalDateString(jsonObject.get("expiration_date").toString()));
         participants.setText(jsonObject.get("max_participate").toString());
         description.setText(jsonObject.get("description").toString());
 
@@ -133,6 +137,8 @@ public class EventController extends SwitchScenes {
     }
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        editButton.setVisible(LoginController.getIsAdmin());
+        editButton.setOnAction((e) -> switchToUpdateScreen());
         backToHome.setOnAction((event) -> back());
         signUpHome.setOnAction((event) -> register());
         signInHome.setOnAction((event) -> switchToLoginScreen());
@@ -146,6 +152,15 @@ public class EventController extends SwitchScenes {
         try{
             getItems();
         }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void switchToUpdateScreen() {
+        try {
+            system.getChildren().clear();
+            system.getChildren().add(FXMLLoader.load(getClass().getResource("updateEvent.fxml")));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

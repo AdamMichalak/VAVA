@@ -38,7 +38,7 @@ public class CreateEventController extends SwitchScenes {
     @FXML private TextField time;
     @FXML private DatePicker date;
     @FXML private TextField description;
-    @FXML private Button createEventButton, addPhotoButton;
+    @FXML private Button createEventButton, addPhotoButton, backButton;
     @FXML private ImageView eventImage;
     final FileChooser fileChooser = new FileChooser();
     private String base64 = null;
@@ -58,6 +58,7 @@ public class CreateEventController extends SwitchScenes {
         FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG", "PNG files (*.png)", "*.PNG");
         fileChooser.getExtensionFilters().addAll(extFilterJPG);
 
+        backButton.setOnAction((e) -> back());
         addPhotoButton.setOnAction((event) -> {
             File file = fileChooser.showOpenDialog(null);
 
@@ -137,6 +138,16 @@ public class CreateEventController extends SwitchScenes {
 
         switchToHomeScreen();
     }
+
+    public void back() {
+        try {
+            system.getChildren().clear();
+            system.getChildren().add(FXMLLoader.load(getClass().getResource("profile.fxml")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void switchToHomeScreen() {
         try {
             system.getChildren().clear();

@@ -69,7 +69,7 @@ public class DB {
 			return null;
 		}
 		try {
-			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
 			if(interests_id != null)
@@ -125,7 +125,7 @@ public class DB {
 			return null;
 		}
 		try {
-			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
 			if(interests_id != null)
@@ -153,8 +153,9 @@ public class DB {
 				tmp.put("name", result.getString("name"));
 				tmp.put("description", result.getString("description"));
 				tmp.put("max_participants", result.getInt("max_participate"));
-				tmp.put("expiration_date", result.getDate("expiration_date"));
-				tmp.put("created_at", result.getDate("created_at"));
+				System.out.println(result.getTimestamp("expiration_date"));
+				tmp.put("expiration_date", result.getTimestamp("expiration_date"));
+				tmp.put("created_at", result.getTimestamp("created_at"));
 				tmp.put("event_id", result.getInt("id"));
 
 				if (result.getBytes("title_photo") == null) {
@@ -180,7 +181,7 @@ public class DB {
 			return null;
 		}
 		try {
-			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
 			if(interests_id != null)
@@ -407,8 +408,8 @@ public class DB {
 				statement.setBytes(5, Base64.getDecoder().decode(request.getTitle_photo()));
 			}
 			statement.setInt(6, request.getMax_participate());
-			statement.setDate(7, new java.sql.Date(new java.util.Date().getTime()));
-			statement.setDate(8, new java.sql.Date(new java.util.Date().getTime()));
+			statement.setTimestamp(7, new java.sql.Timestamp(new java.util.Date().getTime()));
+			statement.setTimestamp(8, new java.sql.Timestamp(new java.util.Date().getTime()));
 			DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 			LocalDateTime dateTime = LocalDateTime.parse(request.getExpiration_date(), frm);
 			statement.setTimestamp(9, java.sql.Timestamp.valueOf(dateTime));
@@ -492,9 +493,10 @@ public class DB {
 			}
 
 			model.setMax_participate(rs.getInt("max_participate"));
-			model.setCreated_at(rs.getDate("created_at"));
-			model.setUpdated_at(rs.getDate("updated_at"));
-			model.setExpiration_date(rs.getDate("expiration_date"));
+			model.setCreated_at(rs.getTimestamp("created_at"));
+			model.setUpdated_at(rs.getTimestamp("updated_at"));
+			System.out.println(rs.getTimestamp("expiration_date"));
+			model.setExpiration_date(rs.getTimestamp("expiration_date"));
 			model.setInterest_name(rs.getString("interest_name"));
 			model.setFirst_name(rs.getString("first_name"));
 			model.setLast_name(rs.getString("last_name"));

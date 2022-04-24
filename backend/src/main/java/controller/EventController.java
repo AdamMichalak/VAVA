@@ -36,7 +36,6 @@ public class EventController {
 	{
 		//if(!result) return Response.exception();
 		Object result = DB.get_events(name, exp_date, interests_id, page);
-		System.out.println(result);
 		if(result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		return ResponseEntity.ok(result.toString());
 	}
@@ -48,7 +47,6 @@ public class EventController {
 	{
 		//if(!result) return Response.exception();
 		Object result = DB.get_page_count(name, exp_date, interests_id);
-		System.out.println(result);
 		if(result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		return ResponseEntity.ok(result.toString());
 	}

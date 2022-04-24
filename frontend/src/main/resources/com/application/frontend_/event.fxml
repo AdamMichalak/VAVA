@@ -6,13 +6,14 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="system" prefHeight="600" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.application.frontend_.EventController">
+<VBox fx:id="system" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.application.frontend_.EventController">
     <children>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #FFFFFF;" VBox.vgrow="ALWAYS">
 
@@ -43,12 +44,6 @@
                 </textFill>
             </Label>
 
-            <Button fx:id="signInHome" layoutX="573.0" layoutY="22.0" mnemonicParsing="false" style="-fx-background-color: #000066;" text="Prihlásiť sa" textFill="WHITE">
-                <font>
-                    <Font name="System Bold" size="13.29230785369873" />
-                </font>
-            </Button>
-
             <Button fx:id="signUpHome" layoutX="678.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Registrovať" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="13.0" />
@@ -61,33 +56,67 @@
                 </font>
             </Button>
 
-            <Label fx:id="eventName" alignment="CENTER" layoutX="205.0" layoutY="61.0" prefHeight="47.0" prefWidth="390.0" text="Názov udalosti">
+            <Label fx:id="eventName" alignment="TOP_LEFT" layoutX="46.0" layoutY="80.0" prefHeight="47.0" prefWidth="425.0" text="Názov udalosti">
                 <font>
                     <Font name="System Bold" size="32.0" />
                 </font>
             </Label>
 
-            <ImageView fx:id="eventImage" fitHeight="206.0" fitWidth="236.0" layoutX="46.0" layoutY="121.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="date" layoutX="320.0" layoutY="122.0" prefHeight="20.0" prefWidth="425.0" style="-fx-background-color: #eaedf0;" text="Dátum 01. januára 1999" />
-            <Label fx:id="time" layoutX="320.0" layoutY="142.0" prefHeight="20.0" prefWidth="425.0" style="-fx-background-color: #eaedf0;" text="Čas o 17:00" />
-            <Label fx:id="participants" layoutX="320.0" layoutY="162.0" prefHeight="26.0" prefWidth="425.0" style="-fx-background-color: #eaedf0;" text="Max. počet: 5" />
-            <Label fx:id="description" alignment="TOP_LEFT" layoutX="320.0" layoutY="182.0" lineSpacing="1.0" prefHeight="144.0" prefWidth="425.0" style="-fx-background-color: #eaedf0;" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" textAlignment="JUSTIFY" wrapText="true">
-                <opaqueInsets>
-                    <Insets />
-                </opaqueInsets>
-            </Label>
+            <ImageView fx:id="eventImage" fitHeight="223.0" fitWidth="286.0" layoutX="488.0" layoutY="133.0" pickOnBounds="true" preserveRatio="true" />
 
-            <Button fx:id="joinEvent" layoutX="626.0" layoutY="280.0" mnemonicParsing="false" style="-fx-background-color: #000066;" text="Zúčastním sa" textFill="WHITE">
-                <font>
-                    <Font name="System Bold" size="13.29230785369873" />
-                </font>
-            </Button>
-
-            <ScrollPane layoutX="46.0" layoutY="372.0" prefHeight="200.0" prefWidth="707.0">
+            <ScrollPane layoutX="47.0" layoutY="371.0" prefHeight="200.0" prefWidth="727.0">
                 <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="592.0" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="708.0" />
                 </content>
             </ScrollPane>
+         <Pane layoutX="46.0" layoutY="133.0" prefHeight="223.0" prefWidth="425.0" style="-fx-background-color: #f4f6f8; -fx-padding: 30px; -fx-border-radius: 8px; -fx-background-radius: 8px;">
+            <children>
+               <Label layoutX="23.0" layoutY="8.0" prefHeight="26.0" prefWidth="67.0" text="Max. počet:">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </Label>
+               <Label layoutX="23.0" layoutY="26.0" prefHeight="26.0" prefWidth="48.0" text="Dátum:">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </Label>
+                  <Label fx:id="date" layoutX="70.0" layoutY="29.0" prefHeight="20.0" prefWidth="305.0" text="1. januára 1999" />
+                  <Label fx:id="participants" layoutX="97.0" layoutY="8.0" prefHeight="26.0" prefWidth="305.0" text="5" />
+                  <Label fx:id="description" alignment="TOP_LEFT" layoutX="25.0" layoutY="84.0" lineSpacing="1.0" prefHeight="77.0" prefWidth="377.0" text="LoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsumLoremIpsum" textAlignment="JUSTIFY" wrapText="true">
+                      <opaqueInsets>
+                          <Insets />
+                      </opaqueInsets>
+                  </Label>
+                  <Label fx:id="time" layoutX="50.0" layoutY="48.0" prefHeight="20.0" prefWidth="345.0" text="17:00" />
+               <Label layoutX="23.0" layoutY="45.0" prefHeight="26.0" prefWidth="28.0" text="Čas:">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </Label>
+               <Label layoutX="23.0" layoutY="61.0" prefHeight="26.0" prefWidth="88.0" text="Popis udalosti:">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </Label>
+      
+                        <Button fx:id="joinEvent" layoutX="286.0" layoutY="175.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="116.0" style="-fx-background-color: #000066;" text="Zúčastním sa" textFill="WHITE">
+                      <font>
+                          <Font name="System Bold" size="13.29230785369873" />
+                      </font>
+                  </Button>
+               <Button fx:id="editButton" layoutX="326.0" layoutY="15.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="75.0" style="-fx-background-color: #000066;" text="Upraviť" textFill="WHITE">
+                  <font>
+                     <Font name="System Bold" size="13.29230785369873" />
+                  </font>
+               </Button>
+            </children>
+         </Pane>
+         <Button fx:id="signInHome" layoutX="569.0" layoutY="22.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066;" text="Prihlásiť" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="13.0" />
+            </font>
+         </Button>
         </AnchorPane>
     </children>
 </VBox>

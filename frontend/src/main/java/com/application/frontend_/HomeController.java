@@ -11,18 +11,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.swing.text.Position;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -31,8 +27,7 @@ import java.util.ResourceBundle;
 public class HomeController extends SwitchScenes{
     @FXML Pagination pagination;
     @FXML private VBox system;
-    @FXML private Button signUpHome;
-    @FXML private Button signInHome;
+    @FXML private Button logoutButton;
     @FXML private Button showProfile;
 
 
@@ -165,8 +160,7 @@ public class HomeController extends SwitchScenes{
     }
 
     public void initialize(URL url, ResourceBundle resourceBundl) {
-        signUpHome.setOnAction((event) -> register());
-        signInHome.setOnAction((event) -> switchToLoginScreen());
+        logoutButton.setOnAction((e) -> logout());
         showProfile.setOnAction((event) -> showProfile());
         try{
             getItems();
@@ -175,19 +169,11 @@ public class HomeController extends SwitchScenes{
         }
     }
 
-    public void register() {
+    public void logout() {
+        LoginController.logout();
         try {
             system.getChildren().clear();
-            system.getChildren().add(FXMLLoader.load(getClass().getResource("register.fxml")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void switchToLoginScreen() {
-        try {
-            system.getChildren().clear();
-            system.getChildren().add(FXMLLoader.load(getClass().getResource("login.fxml")));
+            system.getChildren().add(FXMLLoader.load(getClass().getResource("welcome.fxml")));
         } catch (IOException e) {
             e.printStackTrace();
         }
