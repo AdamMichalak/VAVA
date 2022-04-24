@@ -38,5 +38,8 @@ public class CreateEvent {
 	@PackagePrivate
 	private Integer creator_id;
 
+	@PackagePrivate
+	private Integer id;
+
 }
 
