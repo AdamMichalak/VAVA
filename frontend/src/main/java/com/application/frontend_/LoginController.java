@@ -130,7 +130,7 @@ public class LoginController<url, params> extends SwitchScenes {
     public void switchToHomeScreen() {
         try {
             system.getChildren().clear();
-            system.getChildren().add(FXMLLoader.load(getClass().getResource("home.fxml")));
+            system.getChildren().add(FXMLLoader.load(getClass().getResource("home_.fxml")));
         } catch (IOException e) {
             e.printStackTrace();
         }
