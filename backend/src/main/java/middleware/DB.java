@@ -221,7 +221,6 @@ public class DB {
 					Object value = rs.getObject(name);
 					field.set(model_instance, convertInstanceOfObject(value, field.getType()));
 				} catch (Exception e) {
-					e.printStackTrace();
 				}
 			}
 			list.add(model_instance);

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,7 @@ import javax.validation.Valid;
 import middleware.DB;
 
 import java.security.SecureRandom;
-import java.sql.SQLException;
-import java.text.ParseException;
+
 import util.JwtUtil;
 import service.MyUserDetailsService;
 import request.LoginUser;
@@ -72,7 +72,9 @@ public class UserController {
 				.loadUserByUsername(loginUser.getEmail());
 		final String jwt = jwtTokenUtil.generateToken((UserDetails) user, user.getId());
 		String jwt_str = new JSONObject()
-				.put("jwt", jwt).toString();
+				.put("jwt", jwt).put("authorities", user.getAuthorities()).toString();
+
+
 		return ResponseEntity.ok(jwt_str);
 	}
 
