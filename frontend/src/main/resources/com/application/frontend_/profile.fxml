@@ -94,12 +94,6 @@
                             </font>
                         </Label>
                         <ListView layoutX="20.0" layoutY="134.0" prefHeight="214.0" prefWidth="323.0" />
-                        <Label layoutX="404.0" layoutY="99.0" text="Wishlist">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                        </Label>
-                        <ListView layoutX="404.0" layoutY="134.0" prefHeight="214.0" prefWidth="323.0" />
                     </children>
                 </AnchorPane>
             </children>

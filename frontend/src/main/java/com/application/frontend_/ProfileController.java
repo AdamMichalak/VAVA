@@ -7,8 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
+import org.w3c.dom.events.Event;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -64,6 +66,27 @@ public class ProfileController extends SwitchScenes {
         System.out.println("Response Code : " + responseCode);
     }
 
+    public void getJoinedEvents() throws IOException {
+        String url = "";
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        con.setRequestProperty("Content-Type","application/json");
+        con.setUseCaches(false);
+        con.setAllowUserInteraction(false);
+        LoginController trieda = new LoginController();
+        String token1 = trieda.getToken();
+        token1 = token1.substring(2);
+        token1 = token1.substring(0, token1.length() - 1);
+        token1 = token1.substring(0, token1.length() - 1);
+        con.setRequestProperty ("Authorization", "Bearer "+ token1.toString());
+        con.connect();
+
+
+    }
+
     public void initialize(URL url, ResourceBundle resourceBundl) {
         backToHome.setOnAction((event) -> back());
         //signUpHome.setOnAction((event) -> register());
@@ -74,6 +97,12 @@ public class ProfileController extends SwitchScenes {
         }catch (IOException e) {
             e.printStackTrace();
         }
+        /*
+        try{
+            getJoinedEvents();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
         // json objekt, ktory sa posiela
         //JSONObject mainObject = new JSONObject();
