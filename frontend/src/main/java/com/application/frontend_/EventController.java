@@ -2,11 +2,19 @@ package com.application.frontend_;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,16 +25,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class EventController extends SwitchScenes {
-    @FXML
+	@FXML private TextArea messageArea;
+	@FXML
+	private ScrollPane messages_pane;
+	@FXML
     private VBox system;
+
+	@FXML private Button sendMessage;
 
     @FXML private Button backToHome;
 
@@ -45,6 +55,8 @@ public class EventController extends SwitchScenes {
     @FXML private Label participants;
 
     @FXML private ImageView eventImage;
+
+
 
     public void participateInEvent() throws IOException {
         // pripojenie
@@ -91,6 +103,43 @@ public class EventController extends SwitchScenes {
         }
         in.close();
     }
+
+
+	public void sendMessage() throws IOException {
+		// pripojenie
+		String url = "http://localhost:8080/api/message/create";
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+		// definovanie typu POST / PUT / GET a jazyka JSON
+		con.setRequestMethod("POST");
+		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+		con.setRequestProperty("Content-Type","application/json");
+
+		con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
+
+		// json objekt, ktory sa posiela
+		JSONObject mainObject = new JSONObject();
+		mainObject.put("event_id", currentEventId);
+		mainObject.put("text", messageArea.getText().replaceAll("\n", System.getProperty("line.separator")));
+
+		// poslanie json objektu pomocou WR
+		con.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+		wr.writeBytes(mainObject.toString());
+		wr.flush();
+		wr.close();
+
+		// ziskanie response code 2xx 3xx 4xx a vypisanie spravy
+		int responseCode = con.getResponseCode();
+
+		if (responseCode == 201) {
+			getEventMessages();
+		} else {
+			showMessageDialog(null, "Niečo sa pokazilo");
+		}
+
+	}
 
     public void getItems() throws IOException {
         String url = "http://localhost:8080/api/event/detail?event_id=" + currentEventId;
@@ -141,6 +190,85 @@ public class EventController extends SwitchScenes {
         int responseCode = con.getResponseCode();
     }
 
+	public void getEventMessages() throws IOException {
+		String url = "http://localhost:8080/api/event/messages?event_id="+currentEventId;
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection)obj.openConnection();
+
+		con.setRequestMethod("GET");
+		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+		con.setRequestProperty("Content-Type","application/json");
+		con.setUseCaches(false);
+		con.setAllowUserInteraction(false);
+		con.setRequestProperty ("Authorization", "Bearer " + LoginController.getToken());
+		con.connect();
+
+		if(con.getResponseCode() == 200) {
+			System.out.println("con.getResponseCode() = " + con.getResponseCode());
+			Scanner scan = new Scanner(con.getInputStream());
+			if(scan.hasNext()) {
+				String temp = scan.nextLine();
+				JSONArray arr = new JSONArray(temp.toString());
+				VBox message_list = new VBox();
+				arr.forEach(item -> {
+					JSONObject message = (JSONObject) item;
+					HBox message_box = new HBox();
+					VBox message_info_box = new VBox();
+					Text message_author = new Text("Napísal: "+message.getString("first_name")+" "+message.getString("last_name"));
+					LocalDateTime datetime = ParseDate.parseDateFromDBToLocalDateTime(message.getString("created_at"));
+					String created_at = String.format("%d.%d.%d %d:%d", datetime.getDayOfMonth(), datetime.getMonthValue(),
+							datetime.getYear(),datetime.getHour(),datetime.getMinute());
+					Text message_created_at = new Text("Vytvorené: " + created_at);
+					TextFlow textFlow = new TextFlow();
+					textFlow.setStyle("-fx-padding: 5px;");
+					Text message_content = new Text(message.getString("text"));
+					textFlow.getChildren().add(message_content);
+					message_box.setMinHeight(58.00);
+					message_box.setMinWidth(710);
+					message_box.setStyle("-fx-border-color: #000066; -fx-border-width: 0 0 1 0;");
+					message_info_box.setAlignment(Pos.CENTER_LEFT);
+					message_info_box.setMinWidth(250);
+					message_info_box.setPadding(new Insets(5, 5, 5, 5));
+					message_info_box.setStyle("-fx-border-color: #000066; -fx-border-width: 0 1 0 0;");
+					message_info_box.getChildren().addAll(message_author, message_created_at);
+					message_box.getChildren().addAll(message_info_box, textFlow);
+					message_list.getChildren().add(message_box);
+				});
+				messages_pane.setContent(message_list);
+			}
+		}
+
+//		VBox eventsList = new VBox();
+//		eventsList.setSpacing(10);
+//		eventsList.setPadding(new Insets(20, 20, 20, 20));
+//		for (Object js : list) {
+//			JSONObject event = (JSONObject) js;
+//
+//			HBox eventBox = new HBox();
+//			Label eventName = new Label();
+//			HBox eventNameContainer = new HBox();
+//			eventNameContainer.setMinWidth(510);
+//			eventName.setText(event.getString("name"));
+//			eventName.setPadding(new Insets(5));
+//			eventName.setStyle("-fx-font-size: 14; -fx-font-weight: 700; -fx-background-color: #cdd0d4; -fx-background-radius: 4px;");
+//			eventNameContainer.getChildren().add(eventName);
+//
+//			Button eventBtn = new Button("Zobraziť detaily udalosti");
+//			eventBtn.setPadding(new Insets(5, 25, 5, 25));
+//			eventBtn.setStyle("-fx-background-color: #000066; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand");
+//			eventBtn.setTextFill(Paint.valueOf("#fff"));
+//			eventBtn.setOnAction((e) -> {
+//				currentEventId = event.getInt("id");
+//				showInfoEvent();
+//			});
+//
+//			eventBox.getChildren().addAll(eventNameContainer, eventBtn);
+//			eventsList.getChildren().add(eventBox);
+//		}
+//
+//		myEvents.setContent(eventsList);
+	}
+
     public void initialize(URL url, ResourceBundle resourceBundle) {
         editButton.setOnAction((e) -> switchToUpdateScreen());
         backToHome.setOnAction((event) -> back());
@@ -151,11 +279,23 @@ public class EventController extends SwitchScenes {
                 e.printStackTrace();
             }
         });
+		sendMessage.setOnAction((event -> {
+			try {
+				sendMessage();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}));
         try{
             getItems();
         }catch (IOException e) {
             e.printStackTrace();
         }
+		try{
+			getEventMessages();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     public void switchToUpdateScreen() {
