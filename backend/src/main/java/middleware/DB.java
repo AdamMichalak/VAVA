@@ -68,11 +68,6 @@ public class DB {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 		try {
 			statement = connection.prepareStatement(sql);
-		} catch (SQLException e) {
-			LoggingUtil.log_sql("get_page_count statement prep", sql, e);
-			return null;
-		}
-		try {
 			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
@@ -84,18 +79,13 @@ public class DB {
 					count++;
 				}
 			}
-		} catch (SQLException | ParseException e) {
-			LoggingUtil.log_sql("get_page_count statement sets", sql, e);
-			return null;
-		}
-		try {
 			ResultSet result = statement.executeQuery();
 			JSONObject ret = new JSONObject();
 			result.next();
 			ret.put("page_count", result.getInt("count"));
 			return ret;
-		} catch (SQLException e) {
-			LoggingUtil.log_sql("get_page_count execute", sql, e);
+		} catch (SQLException | ParseException e) {
+			LoggingUtil.log_sql("get_page_count query", sql, e);
 			return null;
 		}
 
@@ -126,13 +116,9 @@ public class DB {
 		sql +=	" ORDER BY expiration_date OFFSET ? LIMIT 4";
 		PreparedStatement statement;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+		JSONArray events = new JSONArray();
 		try {
 			statement = connection.prepareStatement(sql);
-		} catch (SQLException e) {
-			LoggingUtil.log_sql("get_events statement prep", sql, e);
-			return null;
-		}
-		try {
 			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
@@ -145,11 +131,6 @@ public class DB {
 				}
 			}
 			statement.setInt(count,4*(page-1));
-		} catch (SQLException | ParseException e) {
-			return null;
-		}
-		JSONArray events = new JSONArray();
-		try {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				JSONObject tmp = new JSONObject();
@@ -175,9 +156,12 @@ public class DB {
 				events.put(tmp);
 			}
 		}
-		catch (SQLException e) {
+		catch (SQLException | ParseException e) {
+			LoggingUtil.log_sql("get_events query1", sql, e);
 			return null;
 		}
+
+
 		sql = 	"SELECT CEIL(COUNT(*)/4.0) as count FROM events" +
 				" WHERE expiration_date > NOW() AND expiration_date < ?" +
 				" AND NAME ILIKE ?";
@@ -186,10 +170,6 @@ public class DB {
 		}
 		try {
 			statement = connection.prepareStatement(sql);
-		} catch (SQLException e) {
-			return null;
-		}
-		try {
 			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
@@ -201,10 +181,6 @@ public class DB {
 					count++;
 				}
 			}
-		} catch (SQLException | ParseException e) {
-			return null;
-		}
-		try {
 			ResultSet result = statement.executeQuery();
 			JSONObject ret = new JSONObject();
 			result.next();
@@ -212,7 +188,8 @@ public class DB {
 			ret.put("page_count", result.getInt("count"));
 			ret.put("events", events);
 			return ret;
-		} catch (SQLException e) {
+		} catch (SQLException | ParseException e) {
+			LoggingUtil.log_sql("get_events query2", sql, e);
 			return null;
 		}
 	}
@@ -242,6 +219,7 @@ public class DB {
 		try{
 			if(connection==null) connect();
 		} catch (SQLException e){
+			LoggingUtil.log_sql("create_user connection", null, e);
 			return false;
 		}
 		String sql = "INSERT INTO users (first_name, last_name, email, date_of_birth, password, location, gender_id, isic_number, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -249,10 +227,6 @@ public class DB {
 		PreparedStatement statement;
 		try {
 			statement = connection.prepareStatement(sql);
-		} catch (SQLException e) {
-			return false;
-		}
-		try{
 			statement.setString(1, user.getFirst_name());
 			statement.setString(2, user.getLast_name());
 			statement.setString(3, user.getEmail());
@@ -262,12 +236,9 @@ public class DB {
 			statement.setInt(7, user.getGender_id());
 			statement.setString(8, user.getIsic_number());
 			statement.setDate(9, new java.sql.Date(new java.util.Date().getTime()));
-		} catch (ParseException | SQLException e){
-			return false;
-		}
-		try {
 			statement.execute();
-		} catch (SQLException e) {
+		} catch (SQLException | ParseException e) {
+			LoggingUtil.log_sql("create_user query", sql, e);
 			return false;
 		}
 		return true;
@@ -277,6 +248,7 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_events_by_user_participation connection", null, e);
 			return null;
 		}
 		String sql = 	"SELECT name, e.id FROM participation eu JOIN events e ON eu.event_id = e.id WHERE eu.user_id = ?";
@@ -284,15 +256,7 @@ public class DB {
 		PreparedStatement statement;
 		try {
 			statement = connection.prepareStatement(sql);
-		} catch (SQLException e) {
-			return null;
-		}
-		try {
 			statement.setInt(1, id);
-		} catch (SQLException e) {
-			return null;
-		}
-		try {
 			ResultSet result = statement.executeQuery();
 			JSONObject ret = new JSONObject();
 			JSONArray events = new JSONArray();
@@ -306,6 +270,7 @@ public class DB {
 			ret.put("events", events);
 			return ret;
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_events_by_user_participation query", null, e);
 			return null;
 		}
 	}
@@ -314,10 +279,11 @@ public class DB {
 		try{
 			if(connection==null) connect();
 		} catch (SQLException e){
+			LoggingUtil.log_sql("get_user_by_email connection", null, e);
 			return null;
 		}
+		String sql = ("SELECT * FROM USERS WHERE email = ?");
 		try{
-			String sql = ("SELECT * FROM USERS WHERE email = ?");
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, email);
 			ResultSet rs = statement.executeQuery();
@@ -336,6 +302,7 @@ public class DB {
 			return model;
 		}
 		catch (SQLException e){
+			LoggingUtil.log_sql("get_user_by_email query", sql, e);
 			return null;
 		}
 	}
@@ -344,13 +311,14 @@ public class DB {
 		try{
 			if(connection==null) connect();
 		} catch (SQLException e){
+			LoggingUtil.log_sql("get_user_by_id connection", null, e);
 			return null;
 		}
+		String sql = ("SELECT users.id, users.first_name, users.last_name, users.email,\n" +
+				"       users.location, users.date_of_birth, users.password, users.gender_id, \n" +
+				"       users.registered_at, users.isic_number, g.gender_name FROM users\n" +
+				"    join genders g on g.id = users.gender_id where users.id = ?");
 		try{
-			String sql = ("SELECT users.id, users.first_name, users.last_name, users.email,\n" +
-					"       users.location, users.date_of_birth, users.password, users.gender_id, \n" +
-					"       users.registered_at, users.isic_number, g.gender_name FROM users\n" +
-					"    join genders g on g.id = users.gender_id where users.id = ?");
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, id);
 			ResultSet rs = statement.executeQuery();
@@ -370,6 +338,7 @@ public class DB {
 			return model;
 		}
 		catch (SQLException e){
+			LoggingUtil.log_sql("get_user_by_id query", sql, e);
 			return null;
 		}
 	}
@@ -379,10 +348,11 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_interest connection", null, e);
 			return null;
 		}
+		String sql = ("SELECT * FROM interests");
 		try {
-			String sql = ("SELECT * FROM interests");
 			PreparedStatement statement = connection.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
 			ArrayList<Interest> interests = new ArrayList<>();
@@ -394,6 +364,7 @@ public class DB {
 			}
 			return interests;
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_interest query", sql, e);
 			return null;
 		}
 	}
@@ -402,10 +373,11 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("create_event connection", null, e);
 			return false;
 		}
+		String sql = "INSERT INTO events (creator_id, name, interest_id, description, title_photo, max_participate, created_at, updated_at, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try{
-			String sql = "INSERT INTO events (creator_id, name, interest_id, description, title_photo, max_participate, created_at, updated_at, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, request.getCreator_id());
 			statement.setString(2, request.getName());
@@ -426,6 +398,7 @@ public class DB {
 			return true;
 		}
 		catch (SQLException e){
+			LoggingUtil.log_sql("create_event query", sql, e);
 			return false;
 		}
 	}
@@ -434,10 +407,11 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("create_message connection", null, e);
 			return false;
 		}
+		String sql = "INSERT INTO MESSAGES (creator_id, text, created_at, event_id) VALUES (?, ?, ?, ?)";
 		try{
-			String sql = "INSERT INTO MESSAGES (creator_id, text, created_at, event_id) VALUES (?, ?, ?, ?)";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, request.getCreator_id());
 			statement.setString(2, request.getText());
@@ -447,6 +421,7 @@ public class DB {
 			return true;
 		}
 		catch (SQLException e){
+			LoggingUtil.log_sql("create_mesasge query", sql, e);
 			return false;
 		}
 	}
@@ -454,10 +429,11 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("make_participation connection", null, e);
 			return false;
 		}
+		String sql = "INSERT INTO PARTICIPATION (user_id, event_id) VALUES (?, ?)";
 		try{
-			String sql = "INSERT INTO PARTICIPATION (user_id, event_id) VALUES (?, ?)";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, request.getUser_id());
 			statement.setInt(2, request.getEvent_id());
@@ -465,6 +441,7 @@ public class DB {
 			return true;
 		}
 		catch (SQLException e){
+			LoggingUtil.log_sql("make_participation query", sql, e);
 			return false;
 		}
 
@@ -474,6 +451,7 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_event_detail connection", null, e);
 			return null;
 		}
 		String sql = "SELECT events.id, creator_id, name, description, title_photo, max_participate, created_at, updated_at, expiration_date,\n" +
@@ -503,13 +481,9 @@ public class DB {
 			} else {
 				model.setTitle_photo(Base64.getEncoder().encodeToString(rs.getBytes("title_photo")));
 			}
-			EventDetail tmp = new EventDetail();
-			tmp.setExpiration_date(rs.getTime("expiration_date"));
-			System.out.println(tmp.getExpiration_date());
 			model.setMax_participate(rs.getInt("max_participate"));
 			model.setCreated_at(rs.getTimestamp("created_at"));
 			model.setUpdated_at(rs.getTimestamp("updated_at"));
-			System.out.println(rs.getTimestamp("expiration_date"));
 			model.setExpiration_date(rs.getTimestamp("expiration_date"));
 			model.setInterest_name(rs.getString("interest_name"));
 			model.setFirst_name(rs.getString("first_name"));
@@ -522,6 +496,7 @@ public class DB {
 
 
 		} catch (Exception e){
+			LoggingUtil.log_sql("get_vent_detail query", sql, e);
 			return null;
 		}
 	}
@@ -530,6 +505,7 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_messages connection", null, e);
 			return null;
 		}
 		String sql = "SELECT messages.id, messages.creator_id, messages.text, messages.event_id, messages.created_at, u.first_name, u.last_name FROM messages\n" +
@@ -540,6 +516,7 @@ public class DB {
 			ResultSet rs =  statement.executeQuery();
 			return (List<Message>)(Object)resultset_to_model(rs, Message.class);
 		} catch (Exception e){
+			LoggingUtil.log_sql("get_messages query", sql, e);
 			return null;
 		}
 	}
@@ -548,6 +525,7 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_interest query", null, e);
 			return null;
 		}
 		String sql = "SELECT user_id, role_id, role_name FROM user_roles join role r on user_roles.role_id = r.id\n" +
@@ -559,6 +537,7 @@ public class DB {
 			ResultSet rs =  statement.executeQuery();
 			return (List<UserRole>)(Object)resultset_to_model(rs, UserRole.class);
 		} catch (Exception e){
+			LoggingUtil.log_sql("get_interest query", sql, e);
 			return null;
 		}
 	}
@@ -567,6 +546,7 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_all_roles connection", null, e);
 			return null;
 		}
 		String sql = "SELECT user_id, role_id, role_name FROM user_roles join role r on user_roles.role_id = r.id\n" +
@@ -576,6 +556,7 @@ public class DB {
 			ResultSet rs =  statement.executeQuery();
 			return (List<UserRole>)(Object)resultset_to_model(rs, UserRole.class);
 		} catch (Exception e){
+			LoggingUtil.log_sql("get_all_roles query", sql, e);
 			return null;
 		}
 	}
@@ -584,6 +565,7 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("remove_event connection", null, e);
 			return -1;
 		}
 		String sql = "DELETE FROM events where "+filters;
@@ -591,6 +573,7 @@ public class DB {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			return statement.executeUpdate();
 		} catch (Exception e){
+			LoggingUtil.log_sql("remove_event query", sql, e);
 			return -1;
 		}
 	}
@@ -599,10 +582,11 @@ public class DB {
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("update_event connection", null, e);
 			return -1;
 		}
+		String sql = "UPDATE events SET name = ?, interest_id = ?, description = ?, title_photo = ?, max_participate = ?, updated_at = ?, expiration_date = ? WHERE "+filters;
 		try{
-			String sql = "UPDATE events SET name = ?, interest_id = ?, description = ?, title_photo = ?, max_participate = ?, updated_at = ?, expiration_date = ? WHERE "+filters;
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, request.getName());
 			statement.setInt(2, request.getInterest_id());
@@ -620,6 +604,7 @@ public class DB {
 			return statement.executeUpdate();
 		}
 		catch (SQLException e){
+			LoggingUtil.log_sql("update_event query", sql, e);
 			return -1;
 		}
 	}

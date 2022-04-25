@@ -21,6 +21,8 @@ import util.LoggingUtil;
 import javax.validation.Valid;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -38,7 +40,6 @@ public class EventController {
 										 @RequestParam(required = false) String[] interests_id,
 										 @RequestParam Integer page)
 	{
-		//if(!result) return Response.exception();
 		Object result = DB.get_events(name, exp_date, interests_id, page);
 		if(result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		return ResponseEntity.ok(result.toString());
