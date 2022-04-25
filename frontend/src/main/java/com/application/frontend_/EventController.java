@@ -25,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -216,9 +217,8 @@ public class EventController extends SwitchScenes {
 					VBox message_info_box = new VBox();
 					Text message_author = new Text("Napísal: "+message.getString("first_name")+" "+message.getString("last_name"));
 					LocalDateTime datetime = ParseDate.parseDateFromDBToLocalDateTime(message.getString("created_at"));
-					String created_at = String.format("%d.%d.%d %d:%d", datetime.getDayOfMonth(), datetime.getMonthValue(),
-							datetime.getYear(),datetime.getHour(),datetime.getMinute());
-					Text message_created_at = new Text("Vytvorené: " + created_at);
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+					Text message_created_at = new Text("Vytvorené: " + formatter.format(datetime));
 					TextFlow textFlow = new TextFlow();
 					textFlow.setStyle("-fx-padding: 5px;");
 					Text message_content = new Text(message.getString("text"));

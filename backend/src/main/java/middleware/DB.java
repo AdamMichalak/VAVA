@@ -13,6 +13,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -432,7 +433,7 @@ public class DB {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, request.getCreator_id());
 			statement.setString(2, request.getText());
-			statement.setDate(3, new java.sql.Date(new java.util.Date().getTime()));
+			statement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
 			statement.setInt(4, request.getEvent_id());
 			statement.execute();
 			return true;
