@@ -63,9 +63,9 @@ public class ProfileController extends SwitchScenes {
 
         JSONObject jsonObject = new JSONObject(result.toString());
         name.setText(jsonObject.get("first_name").toString() + " " + jsonObject.get("last_name").toString());
-        email.setText("E-mail: " + jsonObject.get("email").toString());
-        isic.setText("ISIC: " + jsonObject.get("isic_number").toString());
-        location.setText("Lokalita: " + jsonObject.get("location").toString());
+        email.setText(jsonObject.get("email").toString());
+        isic.setText(jsonObject.get("isic_number").toString());
+        location.setText( jsonObject.get("location").toString());
     }
 
     public void getJoinedEvents() throws IOException {

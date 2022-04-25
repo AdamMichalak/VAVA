@@ -14,19 +14,19 @@
     <children>
       <Pane prefHeight="606.0" prefWidth="800.0">
          <children>
-   
+
                <Label alignment="CENTER" layoutX="198.0" layoutY="68.0" prefHeight="47.0" prefWidth="390.0" text="Profil">
                    <font>
                        <Font name="System Bold" size="32.0" />
                    </font>
                </Label>
-   
+
                <Button fx:id="backToHome" layoutX="688.0" layoutY="23.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #000066; -fx-cursor: hand;" text="Späť" textFill="WHITE">
                    <font>
                        <Font name="System Bold" size="13.0" />
                    </font>
                </Button>
-   
+
                <Label layoutX="9.0" layoutY="15.0" prefHeight="47.0" prefWidth="353.0" text="LookAndFind">
                    <font>
                        <Font size="32.0" />

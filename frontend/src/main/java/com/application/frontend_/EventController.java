@@ -135,6 +135,7 @@ public class EventController extends SwitchScenes {
 		int responseCode = con.getResponseCode();
 
 		if (responseCode == 201) {
+			messageArea.clear();
 			getEventMessages();
 		} else {
 			showMessageDialog(null, "Niečo sa pokazilo");
@@ -235,6 +236,7 @@ public class EventController extends SwitchScenes {
 					message_list.getChildren().add(message_box);
 				});
 				messages_pane.setContent(message_list);
+				messages_pane.setVvalue(1);
 			}
 		}
 
