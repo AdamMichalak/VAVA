@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Getter
@@ -21,7 +22,7 @@ public class Event{
 	private String title_photo;
 	private Integer max_participate;
 	private String last_name;
-	private Date created_at;
-	private Date updated_at;
-	private Date expiration_date;
+	private Timestamp created_at;
+	private Timestamp updated_at;
+	private Timestamp expiration_date;
 }

@@ -12,6 +12,7 @@ module com.application.frontend_ {
     requires org.json;
     requires java.desktop;
     requires java.logging;
+    requires java.sql;
 
     opens com.application.frontend_ to javafx.fxml;
     exports com.application.frontend_;

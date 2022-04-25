@@ -1,9 +1,11 @@
 package com.application.frontend_;
 
 import com.application.frontend_.SwitchScenes;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -29,11 +31,23 @@ public class LoginController<url, params> extends SwitchScenes {
 
     @FXML private Button loginButton;
 
-    @FXML private Button signUp;
+    @FXML private Button backButton;
+
+    @FXML private Label loginError;
 
     private static String token;
+    private static boolean isAdmin;
 
     public void initialize(URL url, ResourceBundle resourceBundl) {
+        if (token != null) {
+            switchToHomeScreen();
+        }
+
+        BooleanBinding booleanBind = email.textProperty().isEmpty()
+                .or(password.textProperty().isEmpty());
+
+        loginButton.disableProperty().bind(booleanBind);
+
         loginButton.setOnAction((event) -> {
             try {
                 login();
@@ -41,13 +55,13 @@ public class LoginController<url, params> extends SwitchScenes {
                 e.printStackTrace();
             }
         });
-        signUp.setOnAction((event) -> register());
+        backButton.setOnAction((event) -> goBack());
     }
 
-    public void register() {
+    public void goBack() {
         try {
             system.getChildren().clear();
-            system.getChildren().add(FXMLLoader.load(getClass().getResource("register.fxml")));
+            system.getChildren().add(FXMLLoader.load(getClass().getResource("welcome.fxml")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -89,9 +103,9 @@ public class LoginController<url, params> extends SwitchScenes {
 
         // ziskanie response code 2xx 3xx 4xx a vypisanie spravy
         int responseCode = con.getResponseCode();
-        //System.out.println("Sending 'POST' request to URL : " + url);
-        System.out.println("Post Data : " + mainObject);
-        System.out.println("Response Code : " + responseCode);
+        if (responseCode == 401) {
+            loginError.setText("Zadané údaje sú nesprávne");
+        }
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
@@ -104,6 +118,15 @@ public class LoginController<url, params> extends SwitchScenes {
         in.close();
 
         JSONObject jsonObject = new JSONObject(response.toString());
+        JSONArray auth = new JSONArray(jsonObject.get("authorities").toString());
+
+        if (auth.length() > 0) {
+            JSONObject role = (JSONObject) auth.get(0);
+            isAdmin = role.get("authority").toString().equals("ROLE_ADMIN");
+        } else {
+            isAdmin = false;
+        }
+
         token = jsonObject.get("jwt").toString();
 
         switchToHomeScreen();
@@ -111,6 +134,12 @@ public class LoginController<url, params> extends SwitchScenes {
 
     public static String getToken(){
         return token;
+    }
+
+    public static void logout() { token = null; }
+
+    public static boolean getIsAdmin(){
+        return isAdmin;
     }
 
     public void switchToHomeScreen() {

@@ -14,6 +14,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +73,7 @@ public class DB {
 			return null;
 		}
 		try {
-			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
 			if(interests_id != null)
@@ -132,7 +133,7 @@ public class DB {
 			return null;
 		}
 		try {
-			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
 			if(interests_id != null)
@@ -161,8 +162,9 @@ public class DB {
 				tmp.put("name", result.getString("name"));
 				tmp.put("description", result.getString("description"));
 				tmp.put("max_participants", result.getInt("max_participate"));
-				tmp.put("expiration_date", result.getDate("expiration_date"));
-				tmp.put("created_at", result.getDate("created_at"));
+				System.out.println(result.getTimestamp("expiration_date"));
+				tmp.put("expiration_date", result.getTimestamp("expiration_date"));
+				tmp.put("created_at", result.getTimestamp("created_at"));
 				tmp.put("event_id", result.getInt("id"));
 
 				if (result.getBytes("title_photo") == null) {
@@ -188,7 +190,7 @@ public class DB {
 			return null;
 		}
 		try {
-			statement.setDate(1,new java.sql.Date(formatter.parse(exp_date).getTime()));
+			statement.setTimestamp(1,new java.sql.Timestamp(formatter.parse(exp_date).getTime()));
 			statement.setString(2,"%"+name+"%");
 			int count = 3;
 			if(interests_id != null)
@@ -242,7 +244,7 @@ public class DB {
 		} catch (SQLException e){
 			return false;
 		}
-		String sql = "INSERT INTO users (first_name, last_name, email, date_of_birth, password, location, gender_id, isic_number, registered_at, role_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+		String sql = "INSERT INTO users (first_name, last_name, email, date_of_birth, password, location, gender_id, isic_number, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 		PreparedStatement statement;
 		try {
@@ -415,8 +417,8 @@ public class DB {
 				statement.setBytes(5, Base64.getDecoder().decode(request.getTitle_photo()));
 			}
 			statement.setInt(6, request.getMax_participate());
-			statement.setDate(7, new java.sql.Date(new java.util.Date().getTime()));
-			statement.setDate(8, new java.sql.Date(new java.util.Date().getTime()));
+			statement.setTimestamp(7, new java.sql.Timestamp(new java.util.Date().getTime()));
+			statement.setTimestamp(8, new java.sql.Timestamp(new java.util.Date().getTime()));
 			DateTimeFormatter frm = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 			LocalDateTime dateTime = LocalDateTime.parse(request.getExpiration_date(), frm);
 			statement.setTimestamp(9, java.sql.Timestamp.valueOf(dateTime));
@@ -439,7 +441,7 @@ public class DB {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, request.getCreator_id());
 			statement.setString(2, request.getText());
-			statement.setDate(3, new java.sql.Date(new java.util.Date().getTime()));
+			statement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
 			statement.setInt(4, request.getEvent_id());
 			statement.execute();
 			return true;
@@ -468,7 +470,7 @@ public class DB {
 
 	}
 
-	public static Object get_event_detail(Integer event_id, Integer user_id){
+	public static EventDetail get_event_detail(Integer event_id, Integer user_id){
 		try {
 			if (connection == null) connect();
 		} catch (SQLException e) {
@@ -476,7 +478,8 @@ public class DB {
 		}
 		String sql = "SELECT events.id, creator_id, name, description, title_photo, max_participate, created_at, updated_at, expiration_date,\n" +
 				"i.interest_name, u.email, u.first_name, u.last_name, (SELECT count(id) FROM participation p where p.event_id=?) participation_count,\n" +
-				"(SELECT count(id) FROM participation p where p.user_id=?) me_participate\n" +
+				"(SELECT count(id) FROM participation p where p.user_id=? and p.event_id=?) me_participate,\n"+
+				"(CASE WHEN (creator_id=?) THEN true ELSE false END) as me_owner\n"+
 				"FROM events JOIN interests i on events.interest_id = i.id\n" +
 				"JOIN users u on events.creator_id = u.id\n" +
 				"WHERE events.id=?";
@@ -485,6 +488,8 @@ public class DB {
 			statement.setInt(1, event_id);
 			statement.setInt(2, user_id);
 			statement.setInt(3, event_id);
+			statement.setInt(4, user_id);
+			statement.setInt(5, event_id);
 			ResultSet rs =  statement.executeQuery();
 
 			rs.next();
@@ -502,14 +507,16 @@ public class DB {
 			tmp.setExpiration_date(rs.getTime("expiration_date"));
 			System.out.println(tmp.getExpiration_date());
 			model.setMax_participate(rs.getInt("max_participate"));
-			model.setCreated_at(rs.getDate("created_at"));
-			model.setUpdated_at(rs.getDate("updated_at"));
-			model.setExpiration_date(rs.getDate("expiration_date"));
+			model.setCreated_at(rs.getTimestamp("created_at"));
+			model.setUpdated_at(rs.getTimestamp("updated_at"));
+			System.out.println(rs.getTimestamp("expiration_date"));
+			model.setExpiration_date(rs.getTimestamp("expiration_date"));
 			model.setInterest_name(rs.getString("interest_name"));
 			model.setFirst_name(rs.getString("first_name"));
 			model.setLast_name(rs.getString("last_name"));
-			model.setParticipation_count(rs.getInt("max_participate"));
+			model.setParticipation_count(rs.getInt("participation_count"));
 			model.setMe_participate(rs.getInt("me_participate"));
+			model.setMe_owner(rs.getBoolean("me_owner"));
 
 			return model;
 

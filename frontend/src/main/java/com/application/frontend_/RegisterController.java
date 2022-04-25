@@ -38,7 +38,7 @@ public class RegisterController extends SwitchScenes{
     @FXML private TextField password2;
     @FXML private DatePicker birthDate;
     @FXML private VBox gender;
-    @FXML private Button signUpButton;
+    @FXML private Button signUpButton, backButton;
 
     @FXML
     private ComboBox<String>
@@ -69,6 +69,7 @@ public class RegisterController extends SwitchScenes{
         validateText(email,  "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         passwordMatch(password, password2);
 
+        backButton.setOnAction((e) -> goBack());
         signUpButton.setOnAction((event) -> {
             try {
                 register();
@@ -135,12 +136,22 @@ public class RegisterController extends SwitchScenes{
         JSONArray tokenJSON = jsonObject.toJSONArray(nameArray);
         String token = tokenJSON.toString();
 
-        switchToHomeScreen();
+        switchToLoginScreen();
     }
-    public void switchToHomeScreen() {
+
+    public void goBack() {
         try {
             system.getChildren().clear();
-            system.getChildren().add(FXMLLoader.load(getClass().getResource("home.fxml")));
+            system.getChildren().add(FXMLLoader.load(getClass().getResource("welcome.fxml")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void switchToLoginScreen() {
+        try {
+            system.getChildren().clear();
+            system.getChildren().add(FXMLLoader.load(getClass().getResource("login.fxml")));
         } catch (IOException e) {
             e.printStackTrace();
         }
