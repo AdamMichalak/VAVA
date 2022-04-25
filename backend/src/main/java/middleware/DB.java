@@ -235,7 +235,7 @@ public class DB {
 		} catch (SQLException e){
 			return false;
 		}
-		String sql = "INSERT INTO users (first_name, last_name, email, date_of_birth, password, location, gender_id, isic_number, registered_at, role_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+		String sql = "INSERT INTO users (first_name, last_name, email, date_of_birth, password, location, gender_id, isic_number, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 		PreparedStatement statement;
 		try {
