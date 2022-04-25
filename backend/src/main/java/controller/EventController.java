@@ -16,6 +16,7 @@ import request.CreateEvent;
 import request.MakeParticipation;
 import request.BrowseEvents;
 import util.JwtUtil;
+import util.LoggingUtil;
 
 import javax.validation.Valid;
 import java.sql.ResultSet;
@@ -49,7 +50,6 @@ public class EventController {
 										 @RequestParam(required = false, defaultValue = "01.01.2100") String exp_date,
 										 @RequestParam(required = false) String[] interests_id)
 	{
-		//if(!result) return Response.exception();
 		Object result = DB.get_page_count(name, exp_date, interests_id);
 		System.out.println(result);
 		if(result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

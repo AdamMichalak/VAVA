@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><sql_logs>
+    <log>
+        <place>Example</place>
+        <sql>SELECT * FROM example</sql>
+        <exception>example exeption</exception>
+    </log>
+<log><place>niekde</place><sql>SELECT * FROM pes</sql><exception>java.sql.SQLException: nieco</exception></log><log><place>get_page_count execute</place><sql>SELECT CEIL(COUNT(*)/4.0) as count FROM events_ WHERE expiration_date &gt; NOW() AND expiration_date &lt; ? AND NAME ILIKE ? AND interest_id  IN (?,?)</sql><exception>org.postgresql.util.PSQLException: ERROR: relation "events_" does not exist
+  Position: 41</exception></log></sql_logs>

@@ -6,6 +6,7 @@ import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import request.*;
+import util.LoggingUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -46,6 +47,7 @@ public class DB {
 		try{
 			if(connection==null) connect();
 		} catch (SQLException e){
+			LoggingUtil.log_sql("get_page_count connection", null, e);
 			return null;
 		}
 		String sql = 	"SELECT CEIL(COUNT(*)/4.0) as count FROM events" +
@@ -66,6 +68,7 @@ public class DB {
 		try {
 			statement = connection.prepareStatement(sql);
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_page_count statement prep", sql, e);
 			return null;
 		}
 		try {
@@ -81,6 +84,7 @@ public class DB {
 				}
 			}
 		} catch (SQLException | ParseException e) {
+			LoggingUtil.log_sql("get_page_count statement sets", sql, e);
 			return null;
 		}
 		try {
@@ -90,6 +94,7 @@ public class DB {
 			ret.put("page_count", result.getInt("count"));
 			return ret;
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_page_count execute", sql, e);
 			return null;
 		}
 
@@ -100,6 +105,7 @@ public class DB {
 		try{
 			if(connection==null) connect();
 		} catch (SQLException e){
+			LoggingUtil.log_sql("get_events connection", null, e);
 			return null;
 		}
 		String sql = 	"SELECT * FROM events" +
@@ -122,6 +128,7 @@ public class DB {
 		try {
 			statement = connection.prepareStatement(sql);
 		} catch (SQLException e) {
+			LoggingUtil.log_sql("get_events statement prep", sql, e);
 			return null;
 		}
 		try {
@@ -145,6 +152,7 @@ public class DB {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				JSONObject tmp = new JSONObject();
+				System.out.println(result.getDate("expiration_date"));
 				tmp.put("creator_first_name", result.getString("first_name"));
 				tmp.put("creator_last_name", result.getString("last_name"));
 				tmp.put("creator_id", result.getInt("creator_id"));
@@ -490,7 +498,9 @@ public class DB {
 			} else {
 				model.setTitle_photo(Base64.getEncoder().encodeToString(rs.getBytes("title_photo")));
 			}
-
+			EventDetail tmp = new EventDetail();
+			tmp.setExpiration_date(rs.getTime("expiration_date"));
+			System.out.println(tmp.getExpiration_date());
 			model.setMax_participate(rs.getInt("max_participate"));
 			model.setCreated_at(rs.getDate("created_at"));
 			model.setUpdated_at(rs.getDate("updated_at"));
