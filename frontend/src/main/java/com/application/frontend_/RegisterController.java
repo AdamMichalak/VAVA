@@ -121,22 +121,9 @@ public class RegisterController extends SwitchScenes{
         System.out.println("Post Data : " + mainObject);
         System.out.println("Response Code : " + responseCode);
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String output;
-        StringBuffer response = new StringBuffer();
-
-        while ((output = in.readLine()) != null) {
-            response.append(output);
-        }
-        in.close();
-
-        JSONObject jsonObject = new JSONObject(response.toString());
-        JSONArray nameArray = jsonObject.names();
-        JSONArray tokenJSON = jsonObject.toJSONArray(nameArray);
-        String token = tokenJSON.toString();
-
-        switchToLoginScreen();
+        if(responseCode==201){
+			switchToLoginScreen();
+		}
     }
 
     public void goBack() {

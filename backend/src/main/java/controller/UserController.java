@@ -1,10 +1,7 @@
 package controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import io.jsonwebtoken.Claims;
 import model.MyUserSecurity;
 import model.User;
-import netscape.javascript.JSObject;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,11 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import response.Response;
 import request.RegisterUser;
 import javax.validation.Valid;
 import middleware.DB;
@@ -41,21 +36,21 @@ public class UserController {
 	private MyUserDetailsService userDetailsService;
 
 	@PostMapping("/register")
-	public Response<Object> register(@Valid @RequestBody RegisterUser register_user) {
+	public ResponseEntity<Object> register(@Valid @RequestBody RegisterUser register_user) {
 		int strength = 10; // work factor of bcrypt
 		BCryptPasswordEncoder bCryptPasswordEncoder =
 				new BCryptPasswordEncoder(strength, new SecureRandom());
 		String encodedPassword = bCryptPasswordEncoder.encode(register_user.getPassword());
 		register_user.setPassword(encodedPassword);
+		User user = DB.get_user_by_email(register_user.getEmail());
+		if(user!=null){
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
 		boolean result = DB.create_user(register_user);
-		if(!result) return Response.exception();
-		return Response.ok();
+		if(!result) return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(null, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/hello")
-	public String hello(){
-		return "Hello";
-	}
 
 	@PostMapping("/login")
 	public ResponseEntity<Object> createAuthenticationToken(@RequestBody LoginUser loginUser) throws Exception {

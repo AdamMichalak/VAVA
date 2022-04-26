@@ -1,7 +1,5 @@
 package middleware;
 
-import com.sun.jdi.IntegerType;
-import com.sun.tools.javac.Main;
 import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,10 +12,8 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 

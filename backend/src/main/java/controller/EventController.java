@@ -1,31 +1,17 @@
 package controller;
-
-import io.jsonwebtoken.Claims;
 import middleware.DB;
 import model.EventDetail;
 import model.Interest;
-import model.MyUserSecurity;
-import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import request.CreateEvent;
 import request.MakeParticipation;
-import request.BrowseEvents;
 import util.JwtUtil;
-import util.LoggingUtil;
 
 import javax.validation.Valid;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Objects;
-
 
 @RestController
 @RequestMapping("/api/event")
